@@ -1,0 +1,154 @@
+<div class="">
+  <mat-card>
+    <mat-card-title>Endereços</mat-card-title>
+    <mat-card-content>
+      <table mat-table [dataSource]="enderecos" class="mat-elevation-z2 mt-4 endereco-table">
+        <ng-container matColumnDef="tipoLogradouro">
+          <th mat-header-cell *matHeaderCellDef class="tipo-logradouro">Tipo de logradouro</th>
+          <td mat-cell *matCellDef="let endereco"> {{ endereco.tipoLogradouro }} </td>
+        </ng-container>
+        <ng-container matColumnDef="logradouro">
+          <th mat-header-cell *matHeaderCellDef>Logradouro</th>
+          <td mat-cell *matCellDef="let endereco"> {{ endereco.logradouro }} </td>
+        </ng-container>
+        <ng-container matColumnDef="cidade">
+          <th mat-header-cell *matHeaderCellDef>Cidade</th>
+          <td mat-cell *matCellDef="let endereco"> {{ endereco.cidade }} </td>
+        </ng-container>
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef class="estado">Estado</th>
+          <td mat-cell *matCellDef="let endereco"> {{ endereco.estado }} </td>
+        </ng-container>
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef class="action">Ações</th>
+          <td mat-cell *matCellDef="let endereco">
+            <div class="d-flex justify-content-between" style="width: 100%;">
+              <button mat-mini-fab class="action-button" (click)="editarEndereco(endereco, $event)">
+                <mat-icon class="action-button-icon">edit</mat-icon>
+              </button>
+              <button mat-mini-fab class="action-button" (click)="removerEndereco(endereco, $event)" [hidden]="currentIndex > -1">
+                <mat-icon class="action-button-icon">delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="colunasExibidas"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunasExibidas;"></tr>
+      </table>
+      
+      <mat-error *ngIf="naoExisteCobranca()">
+        Informe ao menos um endereço de cobrança
+      </mat-error>
+      <div class="d-flex justify-content-end my-3">
+        <button mat-flat-button color="primary" (click)="novo($event)">Novo</button>
+      </div>
+
+      <form [formGroup]="enderecoCadastroFormGroup" *ngIf="editMode">
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field>
+              <mat-label>CEP</mat-label>
+              <input matInput tylpe="text" formControlName="cep" />
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('cep').hasError('required')">
+                Informe o CEP
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field>
+              <mat-label>Tipo de endereco</mat-label>
+              <mat-select placeholder="Selecione" formControlName="tipoEndereco">
+                <mat-option *ngFor="let tipoEndereco of tiposEnderecos" [value]="tipoEndereco.nome">{{ tipoEndereco.descricao }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('tipoEndereco').hasError('required')">
+                Informe o tipo de endereço
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field>
+              <mat-label>Tipo de residência</mat-label>
+              <mat-select placeholder="Selecione" formControlName="tipoResidencia">
+                <mat-option *ngFor="let tipoResidencia of tiposResidencia" [value]="tipoResidencia.nome">{{ tipoResidencia.descricao }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('tipoResidencia').hasError('required')">
+                Informe o tipo de residência
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <mat-form-field>
+              <mat-label>Tipo de logradouro</mat-label>
+              <mat-select placeholder="Selecione" formControlName="tipoLogradouro">
+                <mat-option *ngFor="let tipoLogradouro of tiposLogradouro" [value]="tipoLogradouro.nome">{{ tipoLogradouro.descricao }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('tipoLogradouro').hasError('required')">
+                Informe o tipo de logradouro
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field>
+              <mat-label>Logradouro</mat-label>
+              <input matInput tylpe="text" formControlName="logradouro" />
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('logradouro').hasError('required')">
+                Informe o logradouro
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field>
+              <mat-label>Número</mat-label>
+              <input matInput tylpe="text" formControlName="numero" />
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('numero').hasError('required')">
+                Informe o número do logradouro
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <mat-form-field>
+              <mat-label>Bairro</mat-label>
+              <input matInput tylpe="text" formControlName="bairro" />
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('bairro').hasError('required')">
+                Informe o bairro
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-5">
+            <mat-form-field>
+              <mat-label>Cidade</mat-label>
+              <input matInput tylpe="text" formControlName="cidade" />
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('cidade').hasError('required')">
+                Informe a cidade
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field>
+              <mat-label>Estado</mat-label>
+              <mat-select placeholder="Selecione" formControlName="estado">
+                <mat-option *ngFor="let estado of estados" [value]="estado.sigla">{{ estado.nome }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('estado').hasError('required')">
+                Informe o estado
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row justify-content-end mt-3">
+          <div class="col-2 d-flex  justify-content-end">
+            <button mat-flat-button color="warn" (click)="cancelar()">Cancelar</button>
+          </div>
+          <div class="col-2 d-flex justify-content-end">
+            <button mat-flat-button color="primary" (click)="adicionarEndereco($event)">{{ (currentIndex > -1) ? 'Salvar': 'Adicionar' }} </button>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

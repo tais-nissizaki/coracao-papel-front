@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+html, body { height: 100%; width: 100%;}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: rgb(207, 207, 207);}
+
+.bd-highlight {
+  background-color: rgba(86,61,124,0.15);
+  border: 1px solid rgba(86,61,124,0.15);
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.mat-flat-button.mat-primary {
+  background-color: #365fa0;
+}

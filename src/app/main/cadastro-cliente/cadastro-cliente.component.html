@@ -1,0 +1,144 @@
+<div class="container-fluid pt-3">
+  <div class="d-flex justify-content-center pb-5">
+    <div style="width: 100%;">
+      <form #form="ngForm"  [formGroup]="cadastroForm" class="container-fluid ">
+        <mat-card style="width: 80%;" class="mx-auto">
+          <mat-card-header class="justify-content-center">
+            <h1 style="margin-left: -20px;">
+              Cadastro
+            </h1>
+          </mat-card-header>
+          <mat-card-content class="mt-3">
+
+            <div class="row">
+              <div class="col">
+                <mat-form-field>
+                  <mat-label>E-mail</mat-label>
+                  <input matInput placeholder="E-mail" formControlName="email" />
+                  <mat-error *ngIf="cadastroForm.get('email').hasError('required') && form.submitted">
+                    Informe o email
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-6">
+                <mat-form-field>
+                  <mat-label>Senha</mat-label>
+                  <input matInput placeholder="Senha" type="password" formControlName="senha" />
+                  <mat-error *ngIf="cadastroForm.get('senha').hasError('required') && form.submitted">
+                    Informe a senha
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-6">
+                <mat-form-field>
+                  <mat-label>Confirmação da senha</mat-label>
+                  <input matInput placeholder="Confirmação da senha" type="password" formControlName="confirmacaoSenha" />
+                  <mat-error *ngIf="cadastroForm.get('confirmacaoSenha').hasError('required') && form.submitted">
+                    Informe a confirmação da senha
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field>
+                  <mat-label>CPF</mat-label>
+                  <input matInput placeholder="CPF" formControlName="cpf" />
+                  <mat-error *ngIf="cadastroForm.get('cpf').hasError('required') && form.submitted">
+                    Informe o CPF
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              
+              <div class="col-4">
+                <mat-form-field>
+                  <mat-label>Gênero</mat-label>
+                  <mat-select  placeholder="Selecione" formControlName="genero"> 
+                    <mat-option value="M">Masculino</mat-option>
+                    <mat-option value="F">Feminino</mat-option>
+                    <mat-option value="O">Outro</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="cadastroForm.get('genero').hasError('required') && form.submitted">
+                    Informe o gênero
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+                <mat-form-field>
+                  <mat-label>Nome</mat-label>
+                  <input matInput placeholder="Nome" formControlName="nome" />
+                  
+                  <mat-error *ngIf="cadastroForm.get('nome').hasError('required') && form.submitted">
+                    Informe o nome
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              
+              <div class="col-4">
+                <mat-form-field>
+                  <mat-label>Data de Nascimento</mat-label>
+                  <input matInput [max]="maxDate" [matDatepicker]="picker" formControlName="dataNascimento">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  
+                  <mat-error *ngIf="cadastroForm.get('dataNascimento').hasError('required') && form.submitted">
+                    Informe a data de nascimento
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field>
+                  <mat-label>Tipo do Telefone</mat-label>
+                  <mat-select  placeholder="Selecione" formControlName="tipoTelefone"> 
+                    <mat-option value="RESIDENCIAL">Residencial</mat-option>
+                    <mat-option value="COMERCIAL">Comercial</mat-option>
+                    <mat-option value="CELULAR">Celular</mat-option>
+                    <mat-option value="OUTRO">Outro</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="cadastroForm.get('tipoTelefone').hasError('required') && form.submitted">
+                    Informe o tipo de telefone
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-6">
+                <mat-form-field>
+                  <mat-label>Telefone</mat-label>
+                  <input matInput placeholder="Telefone" formControlName="telefone" mask="(00) 0000-0000||(00) 0 0000-0000"/>
+                  <mat-error *ngIf="cadastroForm.get('telefone').hasError('required') && form.submitted">
+                    Informe o telefone
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- <app-endereco [enderecos]="cadastroCliente.enderecos"></app-endereco> -->
+            <app-endereco></app-endereco>
+          </mat-card-content>
+          <mat-card-actions>
+            <mat-divider></mat-divider>
+            <div class="mt-3 row justify-content-end">
+              <div class="col-2 d-flex justify-content-end">
+                <button mat-flat-button color="warn" (click)="cancelar()">Cancelar</button>
+              </div>
+              
+              <div class="col-2 d-flex justify-content-end">
+                <button mat-flat-button color="primary" (click)="salvaCliente()">Criar o cadastro</button>
+              </div>
+            </div>
+            
+            
+          </mat-card-actions>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</div>

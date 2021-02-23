@@ -1,0 +1,29 @@
+.endereco-table {
+  width: 100%;
+  background-color: RGB(240, 240, 240);
+}
+.endereco-table th {
+  background-color: RGB(86, 91, 159);
+  color: white
+}
+
+mat-card {
+  background-color: #dedede;
+}
+
+.action-button {
+  background-color: #C5CAE9;
+}
+
+.endereco-table .tipo-logradouro {
+  width: 20%;
+  min-width: 140px;
+}
+.endereco-table .estado {
+  width: 10%;
+  min-width: 60px;
+}
+.endereco-table .action {
+  width: 15%;
+  min-width: 110px;
+}

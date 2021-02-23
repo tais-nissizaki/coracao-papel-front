@@ -1,0 +1,14 @@
+<mat-toolbar class="d-flex justify-content-between">
+
+    <a href="#" mat-button [routerLink]="'/'">
+        <img src="/assets/logo.png" alt="logo" height="60">
+    </a>
+    <button mat-button [matMenuTriggerFor]="menu">
+        <mat-icon style="color: white">person</mat-icon>
+        <mat-menu #menu="matMenu">
+            <a href="#" mat-menu-item [routerLink]="'/login'">Login</a>
+            <a href="#" mat-menu-item [routerLink]="'/cadastro'">Criar meu cadastro</a>
+        </mat-menu>
+    </button>
+</mat-toolbar>
+<router-outlet></router-outlet>
