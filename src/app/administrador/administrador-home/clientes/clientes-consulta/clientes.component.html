@@ -1,0 +1,38 @@
+<form>
+  <div class="row">
+    <div class="col-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome do cliente</mat-label>
+        <input matInput placeholder="Nome" [(ngModel)]="filtroNome" name="filtroNome"/>
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <button type="button" (click)="pesquisar()">Pesquisar</button>
+    </div>
+  </div>
+</form>
+<div *ngIf="clientes && clientes.length > 0">
+<table width="50%" border="1">
+  <tr>
+    <td width="50%">NOME</td>
+    <td width="30%">CPF</td>
+    <td>AÇÕES</td>
+  </tr>
+  <tr *ngFor="let cliente of clientes">
+    <td>{{ cliente.nome }}</td>
+    <td>
+      <span *ngFor="let documento of cliente.documentos">
+        <span *ngIf="documento?.tipoDocumento?.nome == 'CPF'">
+          {{ documento.codigo }}
+        </span>
+      </span>
+    </td>
+    <td>
+      <button type="button" (click)="editar(cliente)">Alterar</button>
+      <button type="button" (click)="ativarInativar(cliente)">
+        {{ cliente.ativo ? 'Inativar' : 'Ativar' }}
+      </button>
+    </td>
+  </tr>
+</table>
+</div>

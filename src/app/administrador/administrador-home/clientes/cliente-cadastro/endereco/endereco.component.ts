@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EnderecoService } from '../../../services/endereco.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { EnderecoService } from '../../../../../services/endereco.service';
 import {
   TipoResidencia, tiposResidencia,
   TipoLogradouro, tiposLogradouro,
-} from '../../../types/endereco';
-import { VerificaEnderecoCobrancaValidation } from '../../../validations/existe-endereco-cobranca.validation';
+} from '../../../../../types/endereco';
 
 @Component({
   selector: 'app-endereco',
@@ -14,7 +13,7 @@ import { VerificaEnderecoCobrancaValidation } from '../../../validations/existe-
 })
 export class EnderecoComponent implements OnInit {
   colunasExibidas: string[] = ['logradouro', 'numero', 'tipoEndereco', 'cidade', 'estado', 'acoes'];
-  enderecos: Endereco[] = [];
+  @Input() enderecos: Endereco[] = [];
   @Output() sincronizarEnderecos = new EventEmitter();
 
   editMode = false;
@@ -33,7 +32,7 @@ export class EnderecoComponent implements OnInit {
     private formBuilder: FormBuilder,
     private enderecoService: EnderecoService) {
     this.enderecoCadastroFormGroup = formBuilder.group({
-      tipoEndereco: ['', [Validators.required]],
+      tipoEndereco: [null, [Validators.required]],
       // tipoResidencia: ['', [Validators.required]],
       cep: ['', [Validators.required]],
       // tipoLogradouro: ['', [Validators.required]],
@@ -58,12 +57,36 @@ export class EnderecoComponent implements OnInit {
     this.enderecoService.obterTiposEndereco().subscribe(
       (tiposEndereco) => {
         this.tiposEnderecos = tiposEndereco;
+        this.preencherDadosEndereco();
       }
     )
   }
   
   tipoEnderecoEquals(option, value) {
     return value && option.id == value.id;
+  }
+
+  estadoEquals(option, value) {
+    console.log('estadoEquals', option, value)
+    return value && option.id == value.id;
+    
+  }
+
+  cidadeEquals(option, value) {
+    console.log('cidadeEquals', option, value)
+    return value && option.id == value.id;
+    
+  }
+
+  private preencherDadosEndereco() {
+    this.enderecos = this.enderecos.map(endereco => {
+      this.cidadesAdicionadas.push({...endereco.cidade});
+      console.log(endereco);
+      return {
+        ...endereco,
+        estado: endereco.cidade.estado,
+      }
+    });
   }
 
   novo() {
@@ -90,7 +113,10 @@ export class EnderecoComponent implements OnInit {
       if (this.currentIndex > -1) {
         this.enderecos = [
           ...this.enderecos.filter(enderecoLista => this.enderecos.indexOf(enderecoLista) != this.currentIndex),
-          this.enderecoCadastroFormGroup.value
+          {
+            id: this.enderecos.find(enderecoLista => this.enderecos.indexOf(enderecoLista) == this.currentIndex).id,
+            ...this.enderecoCadastroFormGroup.value
+          }
         ];
       } else {
         this.enderecos = [
@@ -104,14 +130,28 @@ export class EnderecoComponent implements OnInit {
           break;
         }  
       }
+      console.log('adicionarEndereco', this.enderecos)
       this.editMode = false;
       this.currentIndex = -1;
       this.sincronizarEnderecos.emit(this.enderecos);
+    } else {
+      this.validarCamposFormulario(this.enderecoCadastroFormGroup);
     }
   }
 
+  validarCamposFormulario(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        this.validarCamposFormulario(control);
+      }
+    });
+  }
+
   obterNomeCidade(idCidade: number) {
-    for ( let i=0; i< this.cidades.length; i++) {
+    for ( let i=0; i< this.cidadesAdicionadas.length; i++) {
       if(this.cidadesAdicionadas[i].id == idCidade) {
         return this.cidadesAdicionadas[i].descricao;
       }  
@@ -157,17 +197,13 @@ export class EnderecoComponent implements OnInit {
   }
 
   obterCidades() {
-    const idEstado = this.enderecoCadastroFormGroup.value.estado;
-    for(let i=0; i< this.estados.length; i++) {
-      if(this.estados[i].id == idEstado) {
-        this.enderecoService.obterCidades(this.estados[i].descricao)
+    const estado = this.enderecoCadastroFormGroup.value.estado;
+    this.enderecoService.obterCidades(estado.descricao)
           .subscribe(
             (retornoCidades) => {
               this.cidades = retornoCidades;
             }
           )
-      }
-    }
 
   }
 }

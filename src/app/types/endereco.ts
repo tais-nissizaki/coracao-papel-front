@@ -14,7 +14,7 @@ export const tiposResidencia: TipoResidencia[] = [
 ];
 
 export interface TipoLogradouro extends ChaveValor { }
-export const tiposLogradouro: TipoLogradouro[] = [
+export const tiposLogradouro: TipoResidencia[] = [
   {nome: 'RUA', descricao: 'Rua'},
   {nome: 'AV', descricao: 'Avenida'},
   {nome: 'AL', descricao: 'Alameda'},

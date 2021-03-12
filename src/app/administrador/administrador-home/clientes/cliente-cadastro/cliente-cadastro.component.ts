@@ -1,16 +1,17 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ClienteService } from '../../services/cliente.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ClienteService } from 'src/app/services/cliente.service';
 
 @Component({
-  selector: 'app-cadastro-cliente',
-  templateUrl: './cadastro-cliente.component.html',
-  styleUrls: ['./cadastro-cliente.component.css']
+  selector: 'app-cliente-cadastro',
+  templateUrl: './cliente-cadastro.component.html',
+  styleUrls: ['./cliente-cadastro.component.css']
 })
-export class CadastroClienteComponent implements OnInit {
+export class ClienteCadastroComponent implements OnInit {
   cadastroForm!: FormGroup;
+  tiposCliente: TipoCliente[] = [];
   cadastroCliente: CadastroCliente = {
     nome: '',
     // email: '',
@@ -27,16 +28,21 @@ export class CadastroClienteComponent implements OnInit {
 
   };
 
+  id = '';
+
   constructor(
-    formBuilder: FormBuilder,
-    private location: Location,
-    private clienteService: ClienteService,
+    private route: ActivatedRoute,
     private router: Router,
-    ) {
+    private location: Location,
+    private formBuilder: FormBuilder,
+    private clienteSevice: ClienteService,
+  ) {
+    
     this.cadastroForm = formBuilder.group({
       // genero: [null, [Validators.required]],
       // email: [null, [Validators.required]],
       nome: [null, [Validators.required]],
+      tipoCliente: [null, [Validators.required]],
       // dataNascimento: [null, [Validators.required]],
       // cpf: [null, [Validators.required]],
       // tipoTelefone: [null, [Validators.required]],
@@ -47,37 +53,51 @@ export class CadastroClienteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.clienteSevice.obterTiposCliente().subscribe((tiposCliente) => {
+      this.tiposCliente = tiposCliente;
+    });
+    this.route.paramMap.subscribe(params => {
+      this.clienteSevice.pesquisarCliente({id: +params.get('id')} as CadastroCliente)
+      .subscribe(clientes => {
+        this.id = params.get('id'); 
+        this.cadastroCliente = clientes[0];
+        this.cadastroForm = this.formBuilder.group({
+          nome: [this.cadastroCliente.nome, [Validators.required]],
+          tipoCliente: [this.cadastroCliente.tipoCliente, [Validators.required]],
+        })
+      });
+    });
   }
 
-  get maxDate(): Date {
-    return new Date();
+  tipoClienteEquals(option, value): boolean {
+    return option.id == value.id;
   }
 
-  cancelar(): void {
+  cancelar() {
     this.location.back();
   }
 
-  salvaCliente() {
+  salvarCliente() {
     this.cadastroCliente = {
       ...this.cadastroCliente,
       ...this.cadastroForm.value
     }
     console.log(this.cadastroCliente);
-    this.clienteService.salvarCliente(this.cadastroCliente).subscribe((resultado) => {
+    this.clienteSevice.alterarCliente(this.cadastroCliente).subscribe((resultado) => {
       console.log(resultado);
       alert(resultado);
       if(!`${resultado}`.startsWith('Erro: ')) {
-        this.router.navigateByUrl('/login').then(value => console.log).catch(err => console.error);
+        this.router.navigateByUrl('/administrador/clientes').then(value => console.log).catch(err => console.error);
       }
     });
   }
 
   sincronizarDocumentos(documentos: Documento[]) {
     this.cadastroCliente.documentos = [...documentos];
-    console.log(this.cadastroCliente.documentos);
   }
 
   sincronizarEnderecos(enderecos: Endereco[]) {
     this.cadastroCliente.enderecos = [...enderecos];
   }
+
 }

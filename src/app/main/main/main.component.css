@@ -8,3 +8,7 @@ mat-icon {
   height: 48px;
   font-size: 48px;
 }
+
+a, a:visited, a:hover {
+  color: #000;
+}

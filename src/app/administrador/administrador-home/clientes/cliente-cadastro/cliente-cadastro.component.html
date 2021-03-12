@@ -1,0 +1,66 @@
+<div class="container-fluid pt-3">
+  <div class="d-flex justify-content-center pb-5">
+    <div style="width: 100%;">
+      <form #form="ngForm"  [formGroup]="cadastroForm" class="container-fluid ">
+        <mat-card style="width: 100%;" class="mx-auto">
+          <mat-card-header class="d-flex flex-column">
+            <h1 class="text-center">
+              Cadastro do cliente
+            </h1>
+          </mat-card-header>
+          <mat-card-content class="mt-3">
+            <div class="row">
+              <div class="col-3" *ngIf="!!cadastroCliente.id">
+                <mat-form-field>
+                  <mat-label>Identificador do cliente</mat-label>
+                  <input matInput placeholder="Identificador do cliente" [value]="id" [readonly]="true" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4" *ngIf="!!cadastroCliente.id">
+                <mat-form-field>
+                  <mat-label>Tipo de cliente</mat-label>
+                  <mat-select placeholder="Selecione" formControlName="tipoCliente" [compareWith]="tipoClienteEquals">
+                    <mat-option *ngFor="let tipoCliente of tiposCliente" [value]="tipoCliente">{{ tipoCliente.descricao }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="cadastroForm.get('tipoCliente').hasError('required')">
+                    Informe o tipo de cliente
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-8">
+                <mat-form-field>
+                  <mat-label>Nome</mat-label>
+                  <input matInput placeholder="Nome" formControlName="nome" />
+
+                  <mat-error *ngIf="cadastroForm.get('nome').hasError('required') && form.submitted">
+                    Informe o nome
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+            </div>
+            <app-documento (sincronizarDocumentos)="sincronizarDocumentos($event)" [documentos]="cadastroCliente.documentos"></app-documento>
+
+            <!-- <app-endereco [enderecos]="cadastroCliente.enderecos"></app-endereco> -->
+            <app-endereco (sincronizarEnderecos)="sincronizarEnderecos($event)" [enderecos]="cadastroCliente.enderecos"></app-endereco>
+          </mat-card-content>
+          <mat-card-actions>
+            <mat-divider></mat-divider>
+            <div class="mt-3 row justify-content-end">
+              <div class="col-2 d-flex justify-content-end">
+                <button mat-flat-button color="warn" (click)="cancelar()">Cancelar</button>
+              </div>
+
+              <div class="col-3 d-flex justify-content-end">
+                <button mat-flat-button color="primary" (click)="salvarCliente()">Salvar</button>
+              </div>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</div>

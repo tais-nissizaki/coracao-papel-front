@@ -1,4 +1,4 @@
 interface Estado {
-  sigla: string;
-  nome: string;
+  id: number;
+  descricao: string;
 }
