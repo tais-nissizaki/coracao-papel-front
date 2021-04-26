@@ -1,0 +1,121 @@
+<div>
+  <mat-card>
+    <mat-card-title>Cartões</mat-card-title>   
+    <mat-card-content>
+      
+      <table mat-table [dataSource]="cartoes" class="mat-elevation-z2 mt-4 cartoes-table">
+        <ng-container matColumnDef="bandeira">
+          <th mat-header-cell *matHeaderCellDef>Bandeira</th>
+          <td mat-cell *matCellDef="let cartao"> {{ cartao.bandeiraCartao.descricao }} </td>
+        </ng-container>
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef>Tipo de cartão</th>
+          <td mat-cell *matCellDef="let cartao"> {{ cartao.tipoCartao.descricao }} </td>
+        </ng-container>
+        <ng-container matColumnDef="numero">
+          <th mat-header-cell *matHeaderCellDef>Número do cartão</th>
+          <td mat-cell *matCellDef="let cartao"> {{ mascararNumero(cartao.numero) }} </td>
+        </ng-container>
+        <ng-container matColumnDef="validade">
+          <th mat-header-cell *matHeaderCellDef>Validade</th>
+          <td mat-cell *matCellDef="let cartao"> {{ formatarValidade(cartao.validade) }} </td>
+        </ng-container>
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef class="action">Ações</th>
+          <td mat-cell *matCellDef="let cartao">
+            <div class="d-flex justify-content-between" style="width: 100%;">
+              <button type="button" mat-mini-fab class="action-button" (click)="editarCartao(cartao)">
+                <mat-icon class="action-button-icon">edit</mat-icon>
+              </button>
+              <button type="button" mat-mini-fab class="action-button" (click)="removerCartao(cartao)" [hidden]="currentIndex > -1">
+                <mat-icon class="action-button-icon">delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="colunasExibidas"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunasExibidas;"></tr>
+      </table>
+      
+      <div class="d-flex justify-content-end my-3">
+        <button type="button" mat-flat-button color="primary" (click)="novo()">Novo</button>
+      </div>
+      
+      <form [formGroup]="cartaoCadastroFormGroup" *ngIf="editMode">
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field>
+              <mat-label>Bandeira</mat-label>
+              <mat-select placeholder="Selecione" formControlName="bandeiraCartao">
+                <mat-option *ngFor="let bandeira of bandeiras" [value]="bandeira">{{ bandeira.descricao }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="cartaoCadastroFormGroup.get('bandeiraCartao').hasError('required')">
+                Informe a bandeira do cartão
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field>
+              <mat-label>Tipo de cartão</mat-label>
+              <mat-select placeholder="Selecione" formControlName="tipoCartao">
+                <mat-option *ngFor="let tipoCartao of tiposCartao" [value]="tipoCartao">{{ tipoCartao.descricao }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="cartaoCadastroFormGroup.get('tipoCartao').hasError('required')">
+                Informe o tipo de cartão
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field>
+              <mat-label>Nome impresso no cartão</mat-label>
+              <input matInput type="text" formControlName="nomeImpresso" />
+              <mat-error *ngIf="cartaoCadastroFormGroup.get('nomeImpresso').hasError('required')">
+                Informe o nome impresso no cartão
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field>
+              <mat-label>Número do cartão</mat-label>
+              <input matInput type="text" formControlName="numero" mask="0000 0000 0000 0000" />
+              <mat-error *ngIf="cartaoCadastroFormGroup.get('numero').hasError('required')">
+                Informe o número do cartão
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field>
+              <mat-label>CVV</mat-label>
+              <input matInput type="text" class="txt-cvv" formControlName="cvv" mask="000" />
+              <mat-error *ngIf="cartaoCadastroFormGroup.get('cvv').hasError('required')">
+                Informe o CVV do cartão
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field>
+              <mat-label>Validade</mat-label>
+              <input matInput type="text" class="txt-validade" formControlName="validade" mask="00/0000" />
+              <mat-error *ngIf="cartaoCadastroFormGroup.get('validade').hasError('required')">
+                Informe a validade do cartão
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <div class="row justify-content-end mt-3" *ngIf="editMode">
+        <div class="col-2 d-flex  justify-content-end">
+          <button type="button" mat-flat-button color="warn" (click)="cancelar()">Cancelar</button>
+        </div>
+        <div class="col-2 d-flex justify-content-end">
+          <button type="button" mat-flat-button color="primary" (click)="adicionarCartao()">{{ (currentIndex > -1) ? 'Salvar': 'Adicionar' }} </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

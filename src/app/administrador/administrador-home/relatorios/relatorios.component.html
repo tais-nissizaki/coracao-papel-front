@@ -1,0 +1,22 @@
+<h1 class="text-center">Relatórios</h1>
+
+<form #form="ngForm" [formGroup]="formTipoRelatorio" class="container-fluid">
+  <div class="row">
+    <div class="col-3">
+      <mat-form-field>
+        <mat-label>Tipo de relatório</mat-label>
+        <mat-select placeholder="Selecione" formControlName="tipoRelatorio">
+          <mat-option value="/administrador/relatorios/clientes">Clientes</mat-option>
+          <!-- <mat-option value="/administrador/relatorios/clientes-por-estado">Clientes por estado</mat-option>
+          <mat-option value="/administrador/relatorios/clientes-por-cidade">Clientes por cidade</mat-option> -->
+          <mat-option value="/administrador/relatorios/vendas">Vendas</mat-option>
+          <!-- <mat-option value="/administrador/relatorios/estoque">Estoque</mat-option> -->
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-3">
+      <button type="button" mat-flat-button color="primary" (click)="abrirRelatorio()">Selecionar</button>
+    </div>
+  </div>
+</form>
+<router-outlet></router-outlet>

@@ -1,1 +1,40 @@
-<p>produto-detalhe works!</p>
+<div class="container-fluid pt-4">
+  <div class="d-flex flex-row">
+    <div class="image-box">
+       <img [src]="produto.caminhoImagem" />
+    </div>
+    <div class="d-flex flex-column ml-4 pt-4 detalhe-produto">
+       <div class="row">
+         <div class="col">
+           <b>Título: </b>
+           {{produto.titulo}}
+         </div>
+       </div>
+       <div class="row">
+         <div class="col">
+           <b>Autor: </b>
+           {{produto.autor}}
+         </div>
+       </div>
+       <div class="row">
+         <div class="col">
+           <b>Valor: </b>
+           {{produto.valor | currency:'BRL'}}
+         </div>
+       </div>
+       <div class="row">
+         <div class="col">
+           <b>Sinopse: </b>
+           <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+         </div>
+       </div>
+       <div class="row align-items-end botao-comprar">
+         <div class="col">
+           <button type="button" mat-flat-button color="primary" (click)="adicionarCarrinho(produto)">Comprar</button>
+         </div>
+       </div>
+
+       
+    </div>
+  </div>
+</div>

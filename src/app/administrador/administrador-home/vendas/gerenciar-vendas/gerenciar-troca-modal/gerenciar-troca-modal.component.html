@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{ dialogData.title }}</h1>
+<div mat-dialog-content>
+  <table mat-table [dataSource]="dialogData.pedido.produtos" class="mat-elevation-z2 mt-4 container-fluid">
+    <ng-container matColumnDef="produto">
+      <th mat-header-cell *matHeaderCellDef>Produto</th>
+      <td mat-cell *matCellDef="let itemPedido"> {{ itemPedido.produto.titulo}} </td>
+    </ng-container>
+    <ng-container matColumnDef="quantidade">
+      <th mat-header-cell *matHeaderCellDef>Quantidade</th>
+      <td mat-cell *matCellDef="let itemPedido"> {{ itemPedido.quantidade }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+  </table>
+</div>
+<div mat-dialog-actions class="justify-content-end mt-3">
+  <button type="button" mat-flat-button color="primary" (click)="fechar(true)">Retornar produtos selecionados ao estoque</button>
+  <button type="button" mat-flat-button color="warn" (click)="fechar(false)">Não retornar produtos selecionados ao estoque</button>
+</div>

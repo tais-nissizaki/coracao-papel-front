@@ -1,0 +1,226 @@
+<div class="container-fluid">
+
+  <form [formGroup]="formFiltro">
+    <div class="row">
+      <div class="col-3">
+        <mat-form-field>
+          <mat-label>Faixa etária</mat-label>
+          <mat-select placeholder="Selecione" formControlName="faixaEtaria">
+            <mat-option value="0-25">Até 25 anos</mat-option>
+            <mat-option value="26-30">De 26 a 30 anos</mat-option>
+            <mat-option value="31-40">De 31 a 40 anos</mat-option>
+            <mat-option value="41-50">De 41 a 50 anos</mat-option>
+            <mat-option value="51-200">Acima de 51 anos</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field>
+          <mat-label>Estado</mat-label>
+          <mat-select placeholder="Selecione" formControlName="estado" (selectionChange)="obterCidades()" [compareWith]="estadoEquals">
+            <mat-option *ngFor="let estado of estados" [value]="estado">{{ estado.descricao }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Cidade</mat-label>
+          <mat-select placeholder="Selecione" formControlName="cidade" [compareWith]="estadoEquals">
+            <mat-option *ngFor="let cidade of cidades" [value]="cidade">{{ cidade.descricao }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <mat-form-field>
+          <mat-label>Gênero</mat-label>
+          <mat-select  placeholder="Selecione"> 
+            <mat-option value="M">Masculino</mat-option>
+            <mat-option value="F">Feminino</mat-option>
+            <mat-option value="O">Outro</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field>
+          <mat-label>Tipo de cliente</mat-label>
+          <mat-select placeholder="Selecione" formControlName="tipoCliente" [compareWith]="estadoEquals" multiple="true">
+            <mat-option *ngFor="let tipoCliente of tiposCliente" [value]="tipoCliente">{{ tipoCliente.descricao }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Nome ou parte do nome</mat-label>
+          <input matInput placeholder="Nome" formControlName="nomeParcial" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-right">
+        <button type="button" mat-flat-button color="primary">Obter relatório</button>
+      </div> 
+    </div>
+  </form>
+
+  <div class="row mt-4">
+    <div class="col">
+      <!-- 'nome', 'dataNascimento', 'genero', 'tipoCliente', 'tipoEndereco', 'cidade' -->
+      <table mat-table [dataSource]="clientes" multiTemplateDataRows class="mat-elevation-z2 mt-4 relatorio-cliente-table">
+        <ng-container matColumnDef="expand">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let cliente">
+            <button type="button" mat-icon-button (click)="clienteExpandido = cliente == clienteExpandido ? undefined : cliente">
+              <mat-icon *ngIf="clienteExpandido != cliente">arrow_right</mat-icon>
+              <mat-icon *ngIf="clienteExpandido == cliente">arrow_drop_down</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let cliente"> {{ cliente.nome }}</td>
+        </ng-container>
+        <ng-container matColumnDef="dataNascimento">
+          <th mat-header-cell *matHeaderCellDef class="col-data-nascimento">Data de nascimento</th>
+          <td mat-cell *matCellDef="let cliente"> {{ cliente.dataNascimento | FormatarData }} </td>
+        </ng-container>
+        <ng-container matColumnDef="genero">
+          <th mat-header-cell *matHeaderCellDef class="col-genero">Gênero</th>
+          <td mat-cell *matCellDef="let cliente"> {{ cliente.genero }}</td>
+        </ng-container>
+        <ng-container matColumnDef="tipoCliente">
+          <th mat-header-cell *matHeaderCellDef class="col-tipo-cliente">Tipo de cliente</th>
+          <td mat-cell *matCellDef="let cliente"> {{ cliente.tipoCliente.descricao }}</td>
+        </ng-container>
+        
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="colunas.length">
+            <div class="example-element-detail" [@detailExpand]="element == clienteExpandido ? 'expanded' : 'collapsed'">
+              <div class="container-fluid mat-elevation-z2 mb-3 py-2 endereco-cliente">
+                <div class="row">
+                  <div class="col-3">
+                    <strong>Tipo de endereço:</strong> Cobrança
+                  </div>
+                  <div class="col-4">
+                    <strong>Tipo de residência:</strong> Apartamento
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-3">
+                    <strong>Tipo de logradouro:</strong> Avenida
+                  </div>
+                  <div class="col">
+                    <strong>Logradouro:</strong> Rua das Margaridas
+                  </div>
+                  <div class="col-3">
+                    <strong>Número:</strong> 1212
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col">
+                    <strong>Complemento:</strong> Bloco 12 Apartamento 1234
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-5">
+                    <strong>Bairro:</strong> Vila Oliveira
+                  </div>
+                  <div class="col-5">
+                    <strong>Cidade:</strong> Mogi das Cruzes
+                  </div>
+                  <div class="col">
+                    <strong>Estado:</strong> SP
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid mat-elevation-z2 mb-3 py-2 endereco-cliente">
+                <div class="row">
+                  <div class="col-3">
+                    <strong>Tipo de endereço:</strong> Entrega
+                  </div>
+                  <div class="col-4">
+                    <strong>Tipo de residência:</strong> Apartamento
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-3">
+                    <strong>Tipo de logradouro:</strong> Avenida
+                  </div>
+                  <div class="col">
+                    <strong>Logradouro:</strong> Rua das Margaridas
+                  </div>
+                  <div class="col-3">
+                    <strong>Número:</strong> 1212
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col">
+                    <strong>Complemento:</strong> Bloco 12 Apartamento 1234
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-5">
+                    <strong>Bairro:</strong> Vila Oliveira
+                  </div>
+                  <div class="col-5">
+                    <strong>Cidade:</strong> Mogi das Cruzes
+                  </div>
+                  <div class="col">
+                    <strong>Estado:</strong> SP
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid mat-elevation-z2 mb-3 py-2 endereco-cliente">
+                <div class="row">
+                  <div class="col-3">
+                    <strong>Tipo de documento:</strong> CPF
+                  </div>
+                  <div class="col-4">
+                    <strong>Número do documento:</strong> 123.456.789-09
+                  </div>
+                  <div class="col-3">
+                    <strong>Validade:</strong> -
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-3">
+                    <strong>Tipo de documento:</strong> Passaporte
+                  </div>
+                  <div class="col-4">
+                    <strong>Número do documento:</strong> AB214323
+                  </div>
+                  <div class="col-3">
+                    <strong>Validade:</strong> 14/06/2027
+                  </div>
+                </div>
+              </div>
+              
+              <div class="container-fluid mat-elevation-z2 mb-3 py-2 endereco-cliente">
+                <div class="row">
+                  <div class="col-4">
+                    <strong>Valor do último pedido:</strong> R$ 149,07
+                  </div>
+                  <div class="col-4">
+                    <strong>Maior valor de pedido:</strong> R$ 769,07
+                  </div>
+                  <div class="col-4">
+                    <strong>Menor valor de pedido:</strong> R$ 79,07
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunas;" class="example-element-row"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      </table>
+    </div> 
+  </div>
+</div>

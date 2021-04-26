@@ -1,11 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EnderecoService } from '../../../services/endereco.service';
-import {
-  TipoResidencia, tiposResidencia,
-  TipoLogradouro, tiposLogradouro,
-} from '../../../types/endereco';
-import { VerificaEnderecoCobrancaValidation } from '../../../validations/existe-endereco-cobranca.validation';
+import { EnderecoService } from '../../services/endereco.service';
+import { VerificaEnderecoCobrancaValidation } from '../../validations/existe-endereco-cobranca.validation';
 
 @Component({
   selector: 'app-endereco',
@@ -23,20 +19,21 @@ export class EnderecoComponent implements OnInit {
   cidades: Cidade[] = [];
 
   tiposEnderecos: TipoEndereco[] = [];
-  tiposResidencia: TipoResidencia[] = tiposResidencia;
-  tiposLogradouro: TipoLogradouro[] = tiposLogradouro;
+  tiposResidencia: TipoResidencia[] = [];
+  tiposLogradouro: TipoLogradouro[] = [];
   currentIndex = -1;
 
   cidadesAdicionadas: Cidade[] = [];
 
   constructor(
-    private formBuilder: FormBuilder,
+    formBuilder: FormBuilder,
     private enderecoService: EnderecoService) {
     this.enderecoCadastroFormGroup = formBuilder.group({
+      identificadorEndereco: ['', [Validators.required]],
       tipoEndereco: ['', [Validators.required]],
-      // tipoResidencia: ['', [Validators.required]],
+      tipoResidencia: ['', [Validators.required]],
       cep: ['', [Validators.required]],
-      // tipoLogradouro: ['', [Validators.required]],
+      tipoLogradouro: ['', [Validators.required]],
       logradouro: ['', [Validators.required]],
       numero: ['', [Validators.required]],
       complemento: [''],
@@ -44,14 +41,12 @@ export class EnderecoComponent implements OnInit {
       cidade: ['', [Validators.required]],
       estado: ['', [Validators.required]],
     })
-    this.enderecoService.obterEstados().subscribe(
-      (estadosResponse) => {
-        this.estados = estadosResponse;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    this.enderecoService
+      .obterEstados()
+      .subscribe(
+        estados => this.estados = estados,
+        console.log
+      );
    }
 
   ngOnInit(): void {
@@ -60,6 +55,8 @@ export class EnderecoComponent implements OnInit {
         this.tiposEnderecos = tiposEndereco;
       }
     )
+    this.enderecoService.obterTiposResidencia().subscribe(tiposResidencia => this.tiposResidencia = tiposResidencia);
+    this.enderecoService.obterTiposLogradouro().subscribe(tiposLogradouro => this.tiposLogradouro = tiposLogradouro);
   }
   
   tipoEnderecoEquals(option, value) {
@@ -72,10 +69,11 @@ export class EnderecoComponent implements OnInit {
     this.enderecoCadastroFormGroup.clearValidators();
     this.cidades = [];
     this.enderecoCadastroFormGroup.reset({
+      identificadorEndereco: '',
       tipoEndereco: '',
-      // tipoResidencia: '',
+      tipoResidencia: {} as TipoResidencia,
       cep: '',
-      // tipoLogradouro: '',
+      tipoLogradouro: {} as TipoLogradouro,
       logradouro: '',
       numero: '',
       complemento: '',
@@ -168,6 +166,6 @@ export class EnderecoComponent implements OnInit {
           )
       }
     }
-
   }
+  
 }

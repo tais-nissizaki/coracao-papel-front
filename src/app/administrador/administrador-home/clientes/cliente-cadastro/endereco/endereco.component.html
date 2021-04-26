@@ -50,6 +50,14 @@
 
       <form [formGroup]="enderecoCadastroFormGroup" *ngIf="editMode">
         <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <mat-label>Identificação do endereço</mat-label>
+              <input matInput />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-4">
             <mat-form-field>
               <mat-label>CEP</mat-label>
@@ -70,34 +78,38 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <!-- TIpo de Residência
+          <!-- TIpo de Residência -->
             <div class="col-4">
               <mat-form-field>
                 <mat-label>Tipo de residência</mat-label>
-              <mat-select placeholder="Selecione" formControlName="tipoResidencia">
+                <mat-select placeholder="Selecione">
+                  <mat-option *ngFor="let tipoResidencia of tiposResidencia" [value]="tipoResidencia.nome">{{ tipoResidencia.descricao }}</mat-option>
+                </mat-select>
+              <!-- <mat-select placeholder="Selecione" formControlName="tipoResidencia">
                 <mat-option *ngFor="let tipoResidencia of tiposResidencia" [value]="tipoResidencia.nome">{{ tipoResidencia.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('tipoResidencia').hasError('required')">
                 Informe o tipo de residência
-              </mat-error>
+              </mat-error> -->
             </mat-form-field>
           </div>
-        -->
         </div>
         <div class="row">
-          <!-- TIpo de Logradouro
+          <!-- TIpo de Logradouro -->
           <div class="col-3">
             <mat-form-field>
               <mat-label>Tipo de logradouro</mat-label>
-              <mat-select placeholder="Selecione" formControlName="tipoLogradouro">
+              <mat-select placeholder="Selecione">
+                <mat-option *ngFor="let tipoLogradouro of tiposLogradouro" [value]="tipoLogradouro.nome">{{ tipoLogradouro.descricao }}</mat-option>
+              </mat-select>
+              <!-- <mat-select placeholder="Selecione" formControlName="tipoLogradouro">
                 <mat-option *ngFor="let tipoLogradouro of tiposLogradouro" [value]="tipoLogradouro.nome">{{ tipoLogradouro.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('tipoLogradouro').hasError('required')">
                 Informe o tipo de logradouro
-              </mat-error>
+              </mat-error> -->
             </mat-form-field>
           </div>
-        -->
           <div class="col-6">
             <mat-form-field>
               <mat-label>Logradouro</mat-label>

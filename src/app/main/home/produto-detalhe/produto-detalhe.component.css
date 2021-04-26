@@ -1,0 +1,12 @@
+
+.image-box>img {
+  height: 350px;
+}
+.detalhe-produto{
+  min-width: 600px;
+  font-size: 18px;
+}
+
+.botao-comprar {
+  margin-top: auto;
+}

@@ -1,0 +1,26 @@
+<div class="d-flex flex-column pt-4 container-fluid carrinho">
+  <h1 class="text-center border-bottom border-dark pb-3">Carrinho</h1>
+  <div class="d-flex flex-row justify-content-end justify-content-between">
+    <div class="continuar">
+      <button type="button" mat-button [routerLink]="'/'" class="btn-comprar-mais"><< Comprar mais produtos</button>
+    </div>
+    <div class="continuar">
+      <button type="button" mat-button (click)="pagamento()" class="btn-ir-pagamento">Pagamento >></button>
+    </div>
+  </div>
+  <div class="d-flex flex-row justify-content-center">
+    <div class="produtos">
+      <app-itens-carrinho 
+        [itensCarrinho]="carrinho.itensCarrinho"
+        (adicionarQuantidadeEmitter)="adicionarQuantidade($event)"
+        (reduzirQuantidadeEmitter)="reduzirQuantidade($event)"
+        (removerItemEmitter)="removerItem($event)"
+        (alterarQuantidadeEmitter)="alterarQuantidade($event)"></app-itens-carrinho>
+    </div>
+  </div>
+  <div class="d-flex flex-row justify-content-center">
+    <div class="entrega">
+      <app-entrega *ngIf="carrinho.itensCarrinho.length > 0" [enderecosEntrega]="enderecosCliente" (adicionarEndereco)="adicionarEndereco($event)" (selecionarEndereco)=selecionarEndereco($event)></app-entrega>
+    </div>
+  </div>
+</div>

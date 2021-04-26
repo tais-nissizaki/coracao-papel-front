@@ -15,32 +15,54 @@ export class ClienteService {
     return this.http.get<TipoCliente[]>('http://localhost:8083/tipos-cliente');
   }
 
-  salvarCliente(cadastroCliente: CadastroCliente): Observable<any> {
-    console.log(cadastroCliente);
-    return this.http.post('http://localhost:8083/clientes', {
-      nome: cadastroCliente.nome,
+  obterGeneros(): Observable<Genero[]> {
+    return this.http.get<Genero[]>('http://localhost:8083/generos');
+  }
+
+  obterTiposTelefone(): Observable<TipoTelefone[]> {
+    return this.http.get<TipoTelefone[]>('http://localhost:8083/tipos-telefone');
+  }
+
+  salvarCliente(cadastroCliente: Cliente): Observable<any> {
+    console.log('cadastroCliente', cadastroCliente)
+    const cliente = { 
+      ...cadastroCliente,
+      usuario: {
+        ...cadastroCliente.usuario,
+        nomeUsuario: cadastroCliente.email,
+      },
       ativo: true,
+      telefones: [
+        {
+          numero: cadastroCliente.telefone,
+          tipoTelefone: cadastroCliente.tipoTelefone
+        }
+      ],
       enderecos: cadastroCliente.enderecos.map(endereco => {
         return {
-          cep: endereco.cep,
-          logradouro: endereco.logradouro,
-          numero: endereco.numero,
-          complemento: endereco.complemento,
-          bairro: endereco.bairro,
+          ...endereco,
           cidade: {
             id: endereco.cidade
           },
-          tipoEndereco: {
-            id: endereco.tipoEndereco
-          }
         }
       }),
       documentos: cadastroCliente.documentos,
-    },
+      cartoes: cadastroCliente.cartoes.map(cartao => {
+        return {
+          ...cartao,
+          dataValidade: this.formatarDataValidadeCartao(cartao.validade)
+        }
+      })
+    };
+    return this.http.post('http://localhost:8083/clientes', cliente,
     {responseType: 'text'});
   }
 
-  alterarCliente(cadastroCliente: CadastroCliente): Observable<any> {
+  private formatarDataValidadeCartao(validade: string) {
+    return validade.substring(2) + '-' +validade.substring(0,2) + '-01';
+  }
+
+  alterarCliente(cadastroCliente: Cliente): Observable<any> {
     console.log(cadastroCliente);
     return this.http.put('http://localhost:8083/clientes/'+cadastroCliente.id, {
       nome: cadastroCliente.nome,
@@ -53,21 +75,21 @@ export class ClienteService {
   }
 
   
-  pesquisarCliente(filtroCliente: CadastroCliente): Observable<CadastroCliente[]> {
+  pesquisarCliente(filtroCliente: Cliente): Observable<Cliente[]> {
     if(filtroCliente.nome) {
-      return this.http.get<CadastroCliente[]>('http://localhost:8083/clientes/pesquisar/nome/' + filtroCliente.nome);
+      return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar/nome/' + filtroCliente.nome);
     } else if(filtroCliente.id) {
-      return this.http.get<CadastroCliente[]>('http://localhost:8083/clientes/pesquisar/id/' + filtroCliente.id);
+      return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar/id/' + filtroCliente.id);
     }
   }
   
-  inativarCliente(cliente: CadastroCliente): Observable<any> {
+  inativarCliente(cliente: Cliente): Observable<any> {
       return this.http.put('http://localhost:8083/clientes/inativar/' + cliente.id, 
         {},
         { responseType: 'text'});
   }
   
-  ativarCliente(cliente: CadastroCliente): Observable<any> {
+  ativarCliente(cliente: Cliente): Observable<any> {
     return this.http.put('http://localhost:8083/clientes/ativar/' + cliente.id, 
       {},
       { responseType: 'text'});

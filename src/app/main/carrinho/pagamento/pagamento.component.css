@@ -1,0 +1,17 @@
+.desconto {
+  width: 100%;
+}
+
+.pagamento {
+  background-color: RGB(240, 240, 240);
+  padding-bottom: 1.5em;
+}
+
+.resumo {
+  width: 400px;
+  background-color: RGB(240, 240, 240);
+}
+
+.row {
+  padding: 5px 0 5px 0;
+}

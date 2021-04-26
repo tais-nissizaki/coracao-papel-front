@@ -1,0 +1,39 @@
+<div class="d-flex flex-row mt-3">
+  <div class="d-flex flex-column container-fluid pagamento mx-3 pt-2 rounded">
+    <h1 class="text-center border-bottom border-dark pb-3">Compra efetuada com sucesso</h1>
+    <div class="row">
+      <div class="col text-center">
+        <h1 class="text-center pb-3">Número do pedido: {{solicitacaoPedido.id}}</h1>
+      </div>
+    </div>
+    <div class="row mt-5 justify-content-center">
+      <div class="col-2">
+        Data prevista de entrega:
+      </div>
+      <div class="col-4">
+        {{ dataEntrega | FormatarData }}
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-2">
+        Endereço de entrega:
+      </div>
+      <div class="col-4">
+        {{solicitacaoPedido.enderecoEntrega.endereco | enderecoCompleto}}
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-2">
+        Valor total do pedido:
+      </div>
+      <div class="col-4">
+        {{ solicitacaoPedido.valorTotal | currency:'BRL' }}
+      </div>
+    </div>
+    <div class="row justify-content-center mt-5">
+      <div class="col text-center">
+        <button mat-button routerLink="/meu-perfil/pedidos" color="primary">Ir para meus pedidos</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,7 +10,8 @@ import { ClienteService } from 'src/app/services/cliente.service';
 export class ClientesComponent implements OnInit {
 
   filtroNome = '';
-  clientes: CadastroCliente[] = [];
+  clientes: Cliente[] = [];
+  colunas = ['nome', 'cpf', 'acoes']
 
   constructor(
     private clienteSevice: ClienteService,
@@ -22,7 +23,12 @@ export class ClientesComponent implements OnInit {
 
   pesquisar() {
     console.log(this.filtroNome)
-    this.clienteSevice.pesquisarCliente({nome: this.filtroNome, enderecos: [], documentos: []}).subscribe(
+    const cliente = {
+      nome: this.filtroNome,
+      enderecos: [],
+      documentos: []
+    } as Cliente;
+    this.clienteSevice.pesquisarCliente(cliente).subscribe(
       (retorno) => {
         console.log(retorno);
         this.clientes = retorno;
@@ -30,11 +36,11 @@ export class ClientesComponent implements OnInit {
     );
   }
 
-  editar(cliente: CadastroCliente) {
+  editar(cliente: Cliente) {
     this.router.navigateByUrl(`/administrador/clientes/cadastro/${cliente.id}`)
   }
 
-  ativarInativar(cliente: CadastroCliente) {
+  ativarInativar(cliente: Cliente) {
     console.log(cliente);
     if(cliente.ativo) {
       this.clienteSevice.inativarCliente(cliente).subscribe(
@@ -51,8 +57,8 @@ export class ClientesComponent implements OnInit {
         }
       );
     }
-
-    
   }
-
+  consultarTransacoes(cliente: Cliente) {
+    this.router.navigateByUrl(`/administrador/clientes/${cliente.id}/transacoes`)
+  }
 }

@@ -1,0 +1,34 @@
+<mat-card style="width: 100%;" class="mx-auto" color="primary">
+  <mat-card-header class="d-flex flex-column">
+    <h1 class="text-center">
+      Inativação automática de produtos
+    </h1>
+  </mat-card-header>
+  <mat-card-content class="mt-3">
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field>
+          <mat-label>Quantidade mínima de produtos vendidos</mat-label>
+          <input matInput placeholder="Quantidade mínima de produtos vendidos" />
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field>
+          <mat-label>Tempo em dias para avaliação da inativação</mat-label>
+          <input matInput placeholder="Tempo em dias para avaliação da inativação" />
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+<mat-card-actions>
+  <div class="mt-3 row justify-content-end">
+    <div class="col-2 d-flex justify-content-end">
+      <button mat-flat-button color="warn" type="button">Cancelar</button>
+    </div>
+
+    <div class="col-3 d-flex justify-content-end">
+      <button mat-flat-button color="primary" type="button">Salvar</button>
+    </div>
+  </div>
+</mat-card-actions>

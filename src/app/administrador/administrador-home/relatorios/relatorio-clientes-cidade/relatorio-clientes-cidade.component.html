@@ -1,0 +1,26 @@
+<form #form="ngForm" [formGroup]="formRelatorio" class="container-fluid">
+  <div class="row">
+    <div class="col-3">
+      <mat-form-field>
+        <mat-label>Estado</mat-label>
+        <mat-select placeholder="Selecione" formControlName="estado" (selectionChange)="obterCidades()" [compareWith]="estadoEquals">
+          <mat-option *ngFor="let estado of estados" [value]="estado">{{ estado.descricao }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formRelatorio.get('estado').hasError('required')">
+          Informe o estado
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-3">
+      <mat-form-field>
+        <mat-label>Cidade</mat-label>
+        <mat-select placeholder="Selecione" formControlName="cidade">
+          <mat-option *ngFor="let cidade of cidades" [value]="cidade">{{ cidade.descricao }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-3">
+      <button type="button" mat-flat-button color="primary" (click)="gerarRelatorio()">Selecionar</button>
+    </div>
+  </div>
+</form>

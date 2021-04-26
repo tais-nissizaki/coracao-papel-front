@@ -1,0 +1,40 @@
+<mat-card class="mt-4">
+  <mat-card-content>
+    <form>
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field>
+            <mat-label>Código</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field>
+            <mat-label>Desconto</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field>
+            <mat-label>Início da campanha</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field>
+            <mat-label>Fim da campanha</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <div class="row justify-content-end">
+      <div class="col text-right">
+        <button type="button" mat-flat-button color="warn" class="mr-4" (click)="cancelarEvent.emit()">Cancelar</button>
+        <button type="button" mat-flat-button color="primary">Salvar</button>
+      </div>
+    </div>
+  </mat-card-actions>
+</mat-card>

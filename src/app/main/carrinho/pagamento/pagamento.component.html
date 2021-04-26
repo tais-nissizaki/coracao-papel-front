@@ -1,0 +1,80 @@
+<div class="d-flex flex-row mt-3">
+  <div class="d-flex flex-column container-fluid pagamento mx-3 pt-2 rounded">
+    <h1 class="text-center border-bottom border-dark mb-0 pb-3">Pagamento</h1>
+    <div class="row">
+      <div class="col-4">
+        <button type="button" mat-button [routerLink]="'/carrinho'"><< Carrinho</button>
+      </div>
+    </div>
+    <div class="d-flex flex-column justify-content-center pt-3 border-bottom border-dark">
+      <h2 class="text-center">Cupons</h2>
+      <div class="desconto container-fluid">
+        <div class="row justify-content-md-center">
+          <div class="col-4">
+            <mat-form-field>
+              <mat-label>Código do cupom</mat-label>
+              <input matInput type="text" class="codigo-cupom" [formControl]="cupomFormControl"/>
+              <mat-error *ngIf="cupomFormControl.hasError('required')">
+                Informe o cupom
+              </mat-error>
+              <mat-error *ngIf="cupomFormControl.hasError('invalido')">
+                Cupom inválido
+              </mat-error>
+              <mat-error *ngIf="cupomFormControl.hasError('ja_informado')">
+                Cupom já informado para o pedido
+              </mat-error>
+              <mat-error *ngIf="cupomFormControl.hasError('ja_existe_cupom_promo')">
+                Já foi utilizado um cupom promocional
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <button type="button" color="primary" mat-flat-button class="btn-adicionar-cupom" (click)="adicionarCupom()">Aplicar cupom</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="d-flex flex-column justify-content-center pt-3">
+      <h2 class="text-center">Forma de pagamento</h2>
+      <div class="troca container-fluid">
+        <app-cartoes [valorTotal]="total"></app-cartoes>
+        <div class="row justify-content-md-center">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="d-flex flex-column container-fluid resumo mr-3 pt-2">
+    <h1 class="text-center">Resumo da compra</h1>
+    <div class="row">
+      <div class="col-8">Valor dos produtos</div>
+      <div class="col-4 text-right">{{ valorProdutos | currency:'BRL' }}</div>
+    </div>
+    <div class="row">
+      <div class="col-12 font-weight-bold text-center">Cupons aplicados</div>
+    </div>
+    <div class="row" *ngFor="let cupom of cupons">
+      <div class="col-6">{{ cupom.codigo }}</div>
+      <div class="col-2" *ngIf="cupom.percentual">{{ cupom.percentual/100 | percent  }}</div>
+      <div class="col-2" *ngIf="!cupom.percentual"></div>
+      <div class="col-4" *ngIf="cupom.valor">{{ cupom.valor | currency:'BRL'  }}</div>
+      <div class="col-4" *ngIf="!cupom.valor"></div>
+    </div>
+    <div class="row">
+      <div class="col-8">Frete</div>
+      <div class="col-4 text-right">{{ valorFrete | currency:'BRL' }}</div>
+    </div>
+    
+    <div class="row border-top border-dark">
+      <div class="col-8">Total</div>
+      <div class="col-4 text-right">{{ total | currency:'BRL' }}</div>
+    </div>
+    
+    <div class="row mt-4">
+      <div class="col text-center">
+        <button type="button" mat-flat-button color="primary" (click)="finalizarPedido()">Finalizar compra</button>
+      </div>
+    </div>
+  </div>
+</div>

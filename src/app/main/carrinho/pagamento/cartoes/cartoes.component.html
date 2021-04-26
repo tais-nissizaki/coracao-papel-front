@@ -1,0 +1,105 @@
+<div class="row" *ngFor="let formPagamento of formasPagamento">
+  <div class="col-8">
+    <mat-form-field>
+      <mat-label>Selecione o cartão</mat-label>
+      <mat-select placeholder="Selecione" [(ngModel)]="formPagamento.cartao">
+        <mat-option *ngFor="let cartao of cartoes" [value]="cartao">{{cartao.bandeiraCartao.descricao}} - {{ cartao.numero }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-4">
+    <mat-form-field>
+      <mat-label>Valor a ser pago com este cartão</mat-label>
+      <input matInput type="number" [(ngModel)]="formPagamento.valor" />
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="row d-flex justify-content-end">
+  <div class="col-4 text-right">
+    <button type="button" mat-flat-button color="accent" class="btn-novo-cartao" (click)="adicionarNovoCartao = true">Cadastrar um novo cartão</button>
+  </div>
+  <div class="col-4 text-right" *ngIf="formasPagamento.length < cartoes.length">
+    <button type="button" mat-flat-button color="primary" class="btn-selecionar-outro-cartao" (click)="selecionarNovoCartao()">Selecionar um novo cartão</button>
+  </div>
+</div>
+
+<div *ngIf="adicionarNovoCartao">
+  <mat-divider class="my-4"></mat-divider>
+  <form [formGroup]="novoCartaoForm">
+    <div class="row">
+      <div class="col-4">
+        <mat-form-field>
+          <mat-label>Tipo de cartão</mat-label>
+          <mat-select placeholder="Selecione" formControlName="tipoCartao" class="select-tipo-cartao">
+            <mat-option *ngFor="let tipoCartao of tiposCartao" [value]="tipoCartao">{{ tipoCartao.descricao }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="novoCartaoForm.get('tipoCartao').hasError('required')">
+            Informe o tipo de cartão
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <mat-form-field>
+          <mat-label>Bandeira</mat-label>
+          <mat-select placeholder="Selecione" formControlName="bandeiraCartao" class="select-bandeira-cartao">
+            <mat-option *ngFor="let bandeira of bandeirasCartao" [value]="bandeira">{{ bandeira.descricao }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="novoCartaoForm.get('bandeiraCartao').hasError('required')">
+            Informe a bandeira do cartão
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Nome impresso no cartão</mat-label>
+          <input matInput type="text" class="txt-numero-cartao" formControlName="nomeImpresso"/>
+          <mat-error *ngIf="novoCartaoForm.get('nomeImpresso').hasError('required')">
+            Informe o nome impresso no cartão
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field>
+          <mat-label>Número do cartão</mat-label>
+          <input matInput type="text" class="txt-numero-cartao" formControlName="numero"  mask="0000 0000 0000 0000"/>
+          <mat-error *ngIf="novoCartaoForm.get('numero').hasError('required')">
+            Informe o número do cartão
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-3">
+        <mat-form-field>
+          <mat-label>CVV</mat-label>
+          <input matInput type="text" class="txt-cvv" formControlName="cvv" mask="000" />
+          <mat-error *ngIf="novoCartaoForm.get('cvv').hasError('required')">
+            Informe o CVV do cartão
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-3">
+        <mat-form-field>
+          <mat-label>Validade</mat-label>
+          <input matInput type="text" class="txt-validade" formControlName="validade" mask="00/0000" />
+          <mat-error *ngIf="novoCartaoForm.get('validade').hasError('required')">
+            Informe a validade do cartão
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <mat-checkbox formControlName="desejaCadastrarCartao" color="primary">Desejo adicionar este cartão ao meu cadastro</mat-checkbox>
+      </div>
+    </div>
+    <div class="row justify-content-end">
+      <div class="col-4 text-right">
+        <button type="button" mat-flat-button color="primary" class="btn-adicionar-cartao" (click)="salvarCartao()">Salvar este cartão</button>
+      </div>
+    </div>
+  </form>
+</div>

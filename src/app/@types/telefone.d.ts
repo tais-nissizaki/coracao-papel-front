@@ -1,5 +1,12 @@
 interface Telefone {
-  tipo: string;
-  ddd: number;
-  numero: number;
+  tipoTelefone: TipoTelefone;
+  numero: string;
+  ramal?: string
+}
+
+interface TipoTelefone {
+  id: number;
+  dtCadastro: Date;
+  nome: string;
+  descricao: string;
 }

@@ -1,0 +1,105 @@
+<h1 class="text-center">Entrada em estoque</h1>
+
+<form #form="ngForm" [formGroup]="formFornecedor" class="container-fluid">
+  <div class="row">
+    <div class="col-4">
+      <mat-form-field>
+        <mat-label>Fornecedor</mat-label>
+        <mat-select placeholder="Selecione" formControlName="fornecedor" [compareWith]="fornecedorEquals">
+          <mat-option *ngFor="let fornecedor of fornecedores" [value]="fornecedor">{{ fornecedor?.cnpj | cpfCnpj:'cnpj'}} - {{ fornecedor.razaoSocial }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+
+<form #form="ngForm" [formGroup]="formEstoque" class="container-fluid">
+  <div class="row">
+    <div class="col-4">
+      <mat-form-field>
+        <mat-label>Título</mat-label>
+        <input type="text" matInput formControlName="produto" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let produto of produtosFiltrados | async" [value]="produto">
+            {{produto.titulo}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="formEstoque.get('produto').hasError('required')">
+          Selecione o produto
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <mat-form-field>
+        <mat-label>Quantidade</mat-label>
+        <input type="text" matInput formControlName="quantidade" mask="990">
+        <mat-error *ngIf="formEstoque.get('quantidade').hasError('required')">
+          Informe a quantidade
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-2">
+      <mat-form-field>
+        <mat-label>Valor de custo</mat-label>
+        <input type="text" matInput formControlName="valor" mask="separator.2" thousandSeparator="." separatorLimit="1000" prefix>
+        <!-- <input type="text" matInput formControlName="quantidade"> -->
+        <!-- {{ formEstoque.get('valor').hasError('required') }} -->
+        <mat-error *ngIf="formEstoque.get('valor').hasError('required')">
+          Informe a o valor de custo
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-right">
+      <button type="button" mat-flat-button color="primary" (click)="adicionarItemCompra()">Adicionar produto</button>
+    </div>
+  </div>
+</form>
+
+<div class="container-fluid mt-3">
+  <div class="row">
+    <div class="col text-center">
+      <table mat-table [dataSource]="itemsAdicionados" class="mat-elevation-z2 table-produtos">
+        <ng-container matColumnDef="produto">
+          <th mat-header-cell *matHeaderCellDef>Produto</th>
+          <td mat-cell *matCellDef="let itemEstoque"> {{ itemEstoque.produto.titulo }} </td>
+        </ng-container>
+        <ng-container matColumnDef="quantidade">
+          <th mat-header-cell *matHeaderCellDef class="quantidade">Quantidade</th>
+          <td mat-cell *matCellDef="let itemEstoque">{{ itemEstoque.quantidade }}</td>
+        </ng-container>
+        <ng-container matColumnDef="valor">
+          <th mat-header-cell *matHeaderCellDef class="valor">Valor</th>
+          <td mat-cell *matCellDef="let itemEstoque">{{ itemEstoque.valor | currency:'BRL' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="acao">
+          <th mat-header-cell *matHeaderCellDef class="acoes">Ações</th>
+          <td mat-cell *matCellDef="let itemEstoque">
+            <button mat-icon-button type="button" color="warn" (click)="removerItem(itemEstoque)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="colunasItemEstoque"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunasItemEstoque;"></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<mat-divider class="mt-4"></mat-divider>
+<div class="container-fluid mt-3">
+  <div class="row">
+    <div class="col text-right">
+      <!-- <button 
+        class="mr-2"
+        type="button" 
+        mat-flat-button color="warn" 
+        (click)="cancelar()">Cancelar entrada em estoque</button> -->
+      <button
+        type="button" 
+        mat-flat-button color="primary" 
+        (click)="efetivarEntradaEstoque()">Efetivar entrada em estoque</button>
+    </div>
+  </div>
+</div>

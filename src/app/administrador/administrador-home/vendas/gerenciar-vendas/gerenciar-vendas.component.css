@@ -1,0 +1,23 @@
+.vendas-table {
+  width: 100%;
+}
+
+tr.mat-header-row {
+  height: 30px;
+}
+tr.mat-row {
+  height: 40px;
+}
+
+.numero-pedido {
+  width: 150px;
+}
+
+.action-button {
+  background-color: transparent;
+  box-shadow: none;
+}
+.action-button:hover {
+  background-color: rgba(0,0,0,0.1);
+  box-shadow: none;
+}

@@ -6,6 +6,7 @@ import { ComponentsModule } from 'src/app/components/components.module';
 import { ProdutosListaComponent } from './produtos-lista/produtos-lista.component';
 import { ProdutoComponent } from './produtos-lista/produto/produto.component';
 import { ProdutoDetalheComponent } from './produto-detalhe/produto-detalhe.component';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ProdutoDetalheComponent } from './produto-detalhe/produto-detalhe.compo
   imports: [
     CommonModule,
     HomeRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    PipesModule
   ]
 })
 export class HomeModule {

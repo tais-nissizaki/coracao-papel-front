@@ -1,0 +1,21 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3">
+      <mat-form-field>
+        <mat-label>Tipo de relatório</mat-label>
+        <mat-select placeholder="Selecione" (selectionChange)="abrirRelatorio()" [(ngModel)]="tipoRelatorio">
+          <mat-option value="POR_ESTADO">Relatório de vendas por estado</mat-option>
+          <mat-option value="POR_CIDADE">Relatório de vendas por cidade</mat-option>
+          
+          <mat-option value="POR_FAIXA_ETARIA">Relatório de vendas por faixa etária</mat-option>
+          <mat-option value="POR_GENERO">Relatório de vendas por gênero do cliente</mat-option>
+          <mat-option value="POR_TIPO_DE_CLIENTE">Relatório de vendas por tipo de cliente</mat-option>
+          <mat-option value="FATURAMENTO_MENSAL">Relatório de faturamento mensal</mat-option>
+          <!-- <mat-option value="FATURAMENTO_POR_LIVRO">Faturamento por livro</mat-option>
+          <mat-option value="VENDAS_POR_LIVRO">Vendas por livro</mat-option> -->
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>

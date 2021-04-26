@@ -1,0 +1,40 @@
+.relatorio-cliente-table {
+  width: 100%;
+}
+
+tr.mat-header-row {
+  height: 30px;
+}
+tr.mat-row {
+  height: 40px;
+}
+
+.expand {
+  width: 40px
+}
+.col-data-nascimento {
+  width: 180px;
+}
+.col-genero {
+  width: 130px;
+}
+.col-tipo-cliente {
+  width: 130px;
+}
+
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+tr.example-detail-row {
+  height: 0;
+}
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.endereco-cliente {
+  background-color: whitesmoke;
+}

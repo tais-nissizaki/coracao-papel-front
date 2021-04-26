@@ -1,0 +1,15 @@
+
+      <table mat-table [dataSource]="quantidadesPorEstado" class="mat-elevation-z2 my-4 relatorio-cliente-table">
+
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let quantidadePorEstado"> {{ quantidadePorEstado.estado.descricao }}</td>
+        </ng-container>
+        <ng-container matColumnDef="quantidade">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let quantidadePorEstado"> {{ quantidadePorEstado.quantidade }}</td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="['estado', 'quantidade']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['estado', 'quantidade'];" class="example-element-row"></tr>
+      </table>

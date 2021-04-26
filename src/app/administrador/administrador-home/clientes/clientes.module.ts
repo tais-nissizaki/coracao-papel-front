@@ -7,6 +7,8 @@ import { EnderecoComponent } from './cliente-cadastro/endereco/endereco.componen
 import { DocumentoComponent } from './cliente-cadastro/documento/documento.component';
 import { PipesModule } from '../../../pipes/pipes.module';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
+import { TransacoesComponent } from './transacoes/transacoes.component';
+import { DetalheTransacaoComponent } from './transacoes/detalhe-transacao/detalhe-transacao.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -17,6 +19,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ClienteCadastroComponent,
     EnderecoComponent,
     DocumentoComponent,
+    TransacoesComponent,
+    DetalheTransacaoComponent,
   ],
   imports: [
     CommonModule,

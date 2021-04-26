@@ -1,0 +1,28 @@
+.pedidos-table, .itens-pedido-table {
+  width: 100%;
+}
+
+.detalhe-pedido .row {
+  margin: 10px 0;
+}
+
+.check-troca {
+  width: 55px;
+  padding-right: 30px;
+}
+.quantidade {
+  width: 150px;
+}
+.valor {
+  width: 150px;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+::ng-deep .mat-form-field-flex > .mat-form-field-infix { 
+  padding: 0.4em 0px;
+  border-top-width: 0.5em;
+}

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthStorageService } from '../../services/auth-storage.service';
 
 @Component({
   selector: 'app-administrador-home',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdministradorHomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router,
+    private activatedRouter: ActivatedRoute,
+    private authStorageService: AuthStorageService,
+  ) { }
 
   ngOnInit(): void {
+    console.log(this.activatedRouter.snapshot.url);
+  }
+
+  sair() {
+    this.authStorageService.logout();
+    this.router.navigateByUrl('/administrador/login');
   }
 
 }

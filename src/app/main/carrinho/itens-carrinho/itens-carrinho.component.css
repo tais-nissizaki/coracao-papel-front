@@ -1,0 +1,25 @@
+
+.quantidade {
+  width: 13%;
+}
+.valor {
+  width: 13%;
+}
+.action {
+  width: 10%
+}
+.action-button-icon{
+  color: rgb(161, 23, 23)
+}
+.botao-quantidade {
+  min-width: 13px;
+  padding: 0;
+}
+.botao-quantidade-menos {
+  font-size: 18px;
+}
+
+.itens-carrinho-table {
+  width: 100%;
+  margin-right: 30px;
+}

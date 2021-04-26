@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthStorageService } from '../../services/auth-storage.service';
 
 @Component({
   selector: 'app-main',
@@ -6,9 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-  constructor() { }
+  constructor(
+    private authStorageService: AuthStorageService,
+  ) { }
 
   ngOnInit(): void {
   }
 
+  estaAutenticado(): boolean {
+    const estaAutenticado = this.authStorageService.verificarExpiracao();
+    if(!estaAutenticado) {
+      this.authStorageService.logout();
+    }
+    return estaAutenticado;
+  }
+
+  logout() {
+    this.authStorageService.logout();
+  }
 }

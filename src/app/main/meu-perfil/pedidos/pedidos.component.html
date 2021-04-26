@@ -1,0 +1,160 @@
+<div>
+  <div class="d-flex flex-column">
+    <h1 class="text-center">Pedidos</h1>
+
+    <div class="row">
+      <div class="col-2">
+        <mat-form-field>
+          <mat-label>Data inicial</mat-label>
+          <input matInput [(ngModel)]="dataInicialPesquisa"/>
+        </mat-form-field>
+      </div>
+      <div class="col-2">
+        <mat-form-field>
+          <mat-label>Data final</mat-label>
+          <input matInput [(ngModel)]="dataFinalPesquisa"/>
+        </mat-form-field>
+      </div>
+      <div class="col text-right">
+        <button type="button" mat-flat-button color="primary" (click)="pesquisar()">Pesquisar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <table mat-table [dataSource]="pedidos" class="mat-elevation-z2 mt-4 pedidos-table">
+    <ng-container matColumnDef="numeroPedido">
+      <th mat-header-cell *matHeaderCellDef>Número do pedido</th>
+      <td mat-cell *matCellDef="let pedido"> {{ pedido.id }} </td>
+    </ng-container>
+    <ng-container matColumnDef="dataPedido">
+      <th mat-header-cell *matHeaderCellDef>Data da compra</th>
+      <td mat-cell *matCellDef="let pedido"> {{ pedido.dtCadastro | FormatarData }} </td>
+    </ng-container>
+    <ng-container matColumnDef="endereco">
+      <th mat-header-cell *matHeaderCellDef>Endereço de entrega</th>
+      <td mat-cell *matCellDef="let pedido"> {{ pedido.enderecoEntrega.endereco | enderecoCompleto }} </td>
+    </ng-container>
+    <ng-container matColumnDef="valorPedido">
+      <th mat-header-cell *matHeaderCellDef>Valor do pedido</th>
+      <td mat-cell *matCellDef="let pedido"> {{ pedido.valorTotal | currency:'BRL' }} </td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status do pedido</th>
+      <td mat-cell *matCellDef="let pedido"> {{ pedido.statusPedido.descricao }} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="detalhes">
+      <th mat-header-cell *matHeaderCellDef>Detalhes</th>
+      <td mat-cell *matCellDef="let pedidoGrid">
+        <button mat-icon-button type="button" (click)="detalhes(pedidoGrid)">
+          <mat-icon title="Detalhes">info</mat-icon>
+        </button>
+        <button mat-icon-button type="button" class="btn-solicitar-troca-{{pedidoGrid.numero}}" (click)="solicitarTroca(pedidoGrid)">
+          <mat-icon title="Solicitar troca">swap_horiz</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    
+    <tr mat-header-row *matHeaderRowDef="colunasExibidas"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunasExibidas;"></tr>
+  </table>
+</div>
+
+<div class="container-fluid mt-4 detalhe-pedido" *ngIf="!!pedido">
+  <h2 class="text-center">{{ solicatacaoTroca ? 'Solicitação de Troca' : 'Detalhes do pedido' }}</h2>
+  <div class="row">
+    <div class="col-4">
+      <b>Número do pedido:</b>
+      {{ pedido.id }}
+    </div>
+    <div class="col-4">
+      <b>Data do pedido:</b>
+      {{ pedido.dtCadastro | FormatarData }}
+    </div>
+    <div class="col-4">
+      <b>Data de entrega:</b>
+      {{ pedido.enderecoEntrega.dataEntrega | FormatarData }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <b>Endereço de entrega:</b>
+      {{ pedido.enderecoEntrega.endereco | enderecoCompleto }}
+    </div>
+  </div>
+  <div class="row" *ngIf="!!pedido.cupons">
+    <div class="col">
+      <div class="d-flex flex-row">
+        <b class="mr-2">Cupons aplicados:</b>
+        <div>
+          <p *ngFor="let cupom of pedido.cupons">{{cupom.cupom.codigo}}</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <b>Valor do Frete:</b>
+      {{ pedido.enderecoEntrega.valorFrete | currency:'BRL' }}
+    </div>
+    <div class="col">
+      <b>Valor total:</b>
+      {{ pedido.valorTotal | currency:'BRL' }}
+    </div>
+  </div>
+
+  
+  <table mat-table [dataSource]="pedido.itensPedido" class="mat-elevation-z2 mt-4 itens-pedido-table">
+    <ng-container matColumnDef="checkTroca" *ngIf="solicatacaoTroca">
+      <th mat-header-cell *matHeaderCellDef class="check-troca"> 
+        <mat-checkbox color="primary" 
+        [checked]="todosSelecionados"
+        [indeterminate]="algunsItensSelecionados()"
+        (change)="selecionarTodos($event.checked)"></mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let itemPedido; let i = index;">
+        <mat-checkbox 
+          color="primary"
+          class="check-item-pedido-{{i}}" 
+          [(ngModel)]="itemPedido.selecionado" 
+          (ngModelChange)="atualizarTodosSelecionados()"></mat-checkbox>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="produto">
+      <th mat-header-cell *matHeaderCellDef class="produto">Produto</th>
+      <td mat-cell *matCellDef="let itemPedido"> {{ itemPedido.produto.titulo }} </td>
+    </ng-container>
+    <ng-container matColumnDef="quantidade">
+      <th mat-header-cell *matHeaderCellDef class="quantidade">Quantidade</th>
+      <td mat-cell *matCellDef="let itemPedido" class="align-middle">
+        
+        <span [hidden]="itemPedido.selecionado">
+          {{ itemPedido.quantidade }}
+        </span>
+        <span [hidden]="!itemPedido.selecionado">
+          <mat-label></mat-label>
+          <mat-form-field appearance="outline" style="width:90px ;">
+            <input type="text" matInput mask="999"  [(ngModel)]="itemPedido.quantidade"/>
+          </mat-form-field>
+        </span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="valor">
+      <th mat-header-cell *matHeaderCellDef class="valor">Valor</th>
+      <td mat-cell *matCellDef="let itemPedido">{{ itemPedido.produto.valor * itemPedido.quantidade | currency:'BRL'}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="colunasDetalhePedido"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunasDetalhePedido;"></tr>
+  </table>
+  <div class="row" *ngIf="solicatacaoTroca">
+    <div class="col text-right">
+      <button type="button" mat-flat-button color="primary" id="btn-confirmar-solicitacao-troca" (click)="solicitarTrocaPedidoSelecionado()">Solicitar Troca</button>
+    </div>
+  </div>
+  
+  <div class="row mb-4">
+  </div>
+</div>

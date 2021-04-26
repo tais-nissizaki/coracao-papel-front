@@ -1,0 +1,33 @@
+<form>
+  <div class="row">
+    <div class="col-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Título</mat-label>
+        <input matInput placeholder="Titulo" [(ngModel)]="filtroTitulo" name="filtroTitulo"/>
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <button type="button" (click)="pesquisar()">Pesquisar</button>
+    </div>
+  </div>
+</form>
+<button type="button" (click)="novo()">Novo</button>
+<div *ngIf="produtos && produtos.length > 0">
+<table width="50%" border="1">
+  <tr>
+    <td width="50%">NOME</td>
+    <td width="30%">AUTOR</td>
+    <td>AÇÕES</td>
+  </tr>
+  <tr *ngFor="let produto of produtos">
+    <td>{{ produto.titulo }}</td>
+    <td>{{ produto.autor }}</td>
+    <td>
+      <button type="button" (click)="editar(produto)">Alterar</button>
+      <button type="button" (click)="ativarInativar(produto)">
+        {{ produto.ativo ? 'Inativar' : 'Ativar' }}
+      </button>
+    </td>
+  </tr>
+</table>
+</div>

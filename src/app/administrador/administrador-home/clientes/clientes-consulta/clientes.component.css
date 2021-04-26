@@ -2,3 +2,10 @@
 .action-button {
   background-color: #C5CAE9;
 }
+
+tr.mat-header-row {
+  height: 40px;
+}
+tr.mat-row {
+  height: 40px;
+}

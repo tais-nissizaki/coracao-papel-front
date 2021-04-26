@@ -5,3 +5,7 @@ mat-card {
 mat-card-title {
   font-size: 18px
 }
+
+.image-box {
+  height: 345px;
+}

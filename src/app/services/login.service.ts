@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -6,15 +7,25 @@ import { Observable } from 'rxjs';
 })
 export class LoginService {
 
-  constructor() { }
+  constructor(
+    private httpClient: HttpClient,
+  ) { }
 
-  login(email: string, senha: string) {
-    
+  login(login: Login): Observable<DadosUsuario> {
+    return this.httpClient.post<DadosUsuario>("http://localhost:8083/login", {
+      nomeUsuario: login.email,
+      senha: login.senha
+    });
   }
 
-  loginAdministrador(email: string, senha: string): Observable<boolean> {
-    return new Observable(subscriber => {
-      subscriber.next(email === 'admin' && senha === 'admin');
+  loginAdministrador(loginAdministrado: LoginAdministrador): Observable<DadosUsuario> {
+    // return new Observable(subscriber => {
+    //   subscriber.next(email === 'admin' && senha === 'admin');
+    // });
+    
+    return this.httpClient.post<DadosUsuario>("http://localhost:8083/login", {
+      nomeUsuario: loginAdministrado.usuario,
+      senha: loginAdministrado.senha
     });
   }
 }

@@ -1,0 +1,17 @@
+<!-- <div class="meu-perfil"> -->
+  <mat-drawer-container class="sidebar-container">
+    <mat-drawer mode="side" opened class="d-flex sidebar">
+      <ul class="menu">
+        <li><a routerLink="/meu-perfil/pedidos" id="menu-perfil-pedidos">Pedidos</a></li>
+        <li><a>Dados básicos</a></li>
+        <li><a>Alterar senha</a></li>
+        <li><a>Endereços</a></li>
+        <li><a>Cartões</a></li>
+        <li><a routerLink="/meu-perfil/meus-cupons" id="menu-perfil-cupons">Meus cupons de troca</a></li>
+      </ul>
+    </mat-drawer>
+    <mat-drawer-content class="container-fluid admin-content">
+      <router-outlet></router-outlet>
+    </mat-drawer-content>
+  </mat-drawer-container>
+<!-- </div> -->

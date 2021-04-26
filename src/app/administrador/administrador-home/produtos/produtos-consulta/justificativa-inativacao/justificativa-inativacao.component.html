@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Justificar {{ data.inativacao ? 'inativação': 'ativação'}} do produto</h1>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="col">
+      <mat-form-field>
+        <mat-label>Categoria</mat-label>
+        <mat-select [(ngModel)]="data.categoria" [compareWith]="categoriaEquals">
+          <mat-option *ngFor="let categoria of categorias" [value]="categoria">{{categoria.descricao}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <mat-form-field>
+        <mat-label>Justificativa</mat-label>
+        <textarea matInput placeholder="Justificativa" [(ngModel)]="data.justificativa" rows="4"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button color="warn"(click)="close()">Cancelar</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>{{ data.inativacao ? 'Inativar': 'Ativar'}}</button>
+</div>

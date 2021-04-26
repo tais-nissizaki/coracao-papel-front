@@ -1,0 +1,66 @@
+<mat-card style="width: 100%;" class="mx-auto mt-3" color="primary">
+  <mat-card-header class="d-flex flex-column">
+    <h1 class="text-center">
+      Grupos de precificação de produtos
+    </h1>
+  </mat-card-header>
+  <mat-card-content>
+    
+    <table mat-table [dataSource]="gruposPrecificacao" class="mat-elevation-z2 container-fluid mb-3">
+      <ng-container matColumnDef="nomeGrupo">
+        <th mat-header-cell *matHeaderCellDef>Grupo de precificação</th>
+        <td mat-cell *matCellDef="let grupoPrecificacao"> {{ grupoPrecificacao.descricao }} </td>
+      </ng-container>
+      <ng-container matColumnDef="margemLucro">
+        <th mat-header-cell *matHeaderCellDef>Margem de lucro</th>
+        <td mat-cell *matCellDef="let grupoPrecificacao"> {{ grupoPrecificacao.margemLucro | number:'1.1':'pt-br' }} %</td>
+      </ng-container>
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let cupom">
+          <button mat-icon-button type="button">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+    </table>
+    <div class="row">
+      <div class="col d-flex justify-content-end">
+        <button mat-flat-button type="button" color="primary" (click)="modoEdicao = true">
+          Novo
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="modoEdicao">
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field>
+            <mat-label>Nome do grupo de precificação</mat-label>
+            <input matInput placeholder="Nome do grupo de precificação" />
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field>
+            <mat-label>Margem de lucro</mat-label>
+            <input matInput placeholder="Margem de lucro" />
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <mat-card-actions class="mb-0">
+        <div class="row justify-content-end">
+          <div class="col-2 d-flex justify-content-end">
+            <button mat-flat-button color="warn" type="button">Cancelar</button>
+          </div>
+
+          <div class="col-3 d-flex justify-content-end">
+            <button mat-flat-button color="primary" type="button">Salvar</button>
+          </div>
+        </div>
+      </mat-card-actions>
+    </div>
+  </mat-card-content>
+</mat-card>

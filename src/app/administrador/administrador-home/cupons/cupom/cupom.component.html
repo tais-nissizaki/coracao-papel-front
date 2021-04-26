@@ -1,0 +1,12 @@
+<div class="container-fluid">
+  <h1 class="text-center">Cupons promocionais</h1>
+
+  <mat-card>
+    <mat-card-content>
+        <app-cupom-lista [cupons]="cupons" (novoEvent)="abrirNovo()"></app-cupom-lista>
+    </mat-card-content>
+  </mat-card>
+
+  <app-cupom-cadastro *ngIf="modoEdicao" (cancelarEvent)="cancelarEdicao()"></app-cupom-cadastro>
+
+</div>

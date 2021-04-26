@@ -4,7 +4,7 @@ import { DocumentoService } from '../../../services/documento.service';
 import { DatasService } from '../../../services/datas.service';
 
 @Component({
-  selector: 'app-documento',
+  selector: 'app-documento-cad-cli',
   templateUrl: './documento.component.html',
   styleUrls: ['./documento.component.css'],
 

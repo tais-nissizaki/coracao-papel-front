@@ -12,19 +12,19 @@ import { ClienteService } from 'src/app/services/cliente.service';
 export class ClienteCadastroComponent implements OnInit {
   cadastroForm!: FormGroup;
   tiposCliente: TipoCliente[] = [];
-  cadastroCliente: CadastroCliente = {
+
+  cadastroCliente: Cliente = {
     nome: '',
-    // email: '',
-    // senha: '',
-    // confirmacaoSenha: '',
-    // cpf: '',
-    // genero: '',
-    // dataNascimento: new Date(),
-    // tipoTelefone: '',
-    // telefone: '',
+    email: '',
+    senha: '',
+    confirmacaoSenha: '',
+    cpf: '',
+    dataNascimento: new Date(),
+    tipoTelefone: {} as TipoTelefone,
+    telefone: '',
     enderecos: [],
-    documentos: []
-    // cartoes: [],
+    documentos: [],
+    cartoes: [],
 
   };
 
@@ -53,11 +53,13 @@ export class ClienteCadastroComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.clienteSevice.obterTiposCliente().subscribe((tiposCliente) => {
-      this.tiposCliente = tiposCliente;
-    });
+    this.clienteSevice
+      .obterTiposCliente()
+      .subscribe((tiposCliente) => {
+        this.tiposCliente = tiposCliente;
+      });
     this.route.paramMap.subscribe(params => {
-      this.clienteSevice.pesquisarCliente({id: +params.get('id')} as CadastroCliente)
+      this.clienteSevice.pesquisarCliente({id: +params.get('id')} as Cliente)
       .subscribe(clientes => {
         this.id = params.get('id'); 
         this.cadastroCliente = clientes[0];

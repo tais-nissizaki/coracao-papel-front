@@ -1,38 +1,67 @@
-<form>
-  <div class="row">
-    <div class="col-4">
-      <mat-form-field appearance="outline">
-        <mat-label>Nome do cliente</mat-label>
-        <input matInput placeholder="Nome" [(ngModel)]="filtroNome" name="filtroNome"/>
-      </mat-form-field>
+<h1 class="text-center">Clientes</h1>
+<div class="container-fluid">
+
+  <form>
+    <div class="row">
+      <div class="col-4">
+        <mat-form-field>
+          <mat-label>Nome do cliente</mat-label>
+          <input matInput placeholder="Nome" [(ngModel)]="filtroNome" name="filtroNome"/>
+        </mat-form-field>
+      </div>
+      <div class="col-3">
+        <mat-form-field>
+          <mat-label>CPF</mat-label>
+          <input matInput placeholder="CPF" mask="000.000.000-00"/>
+        </mat-form-field>
+      </div>
+      <div class="col-3">
+        <mat-form-field>
+          <mat-label>Gênero</mat-label>
+          <input matInput placeholder="Gênero" />
+        </mat-form-field>
+      </div>
     </div>
-    <div class="col-4">
-      <button type="button" (click)="pesquisar()">Pesquisar</button>
+    
+    <div class="row">
+      <div class="col d-flex justify-content-end">
+        <button type="button" mat-flat-button color="primary" (click)="pesquisar()">Pesquisar</button>
+      </div>
     </div>
+  </form>
+  <div *ngIf="clientes && clientes.length > 0">
+    
+    <table mat-table [dataSource]="clientes" class="mat-elevation-z2 container-fluid my-3">
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let cliente"> {{ cliente.nome }} </td>
+      </ng-container>
+      <ng-container matColumnDef="cpf">
+        <th mat-header-cell *matHeaderCellDef>CPF</th>
+        <td mat-cell *matCellDef="let cliente">
+          
+          <span *ngFor="let documento of cliente.documentos">
+            <span *ngIf="documento?.tipoDocumento?.nome == 'CPF'">
+              {{ documento.codigo }}
+            </span>
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let cliente">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item type="button" (click)="editar(cliente)">Alterar</button>
+            <button mat-menu-item type="button" (click)="ativarInativar(cliente)">{{ cliente.ativo ? 'Inativar' : 'Ativar' }}</button>
+            <button mat-menu-item type="button" (click)="consultarTransacoes(cliente)">Consultar Transações</button>
+          </mat-menu>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+    </table>
   </div>
-</form>
-<div *ngIf="clientes && clientes.length > 0">
-<table width="50%" border="1">
-  <tr>
-    <td width="50%">NOME</td>
-    <td width="30%">CPF</td>
-    <td>AÇÕES</td>
-  </tr>
-  <tr *ngFor="let cliente of clientes">
-    <td>{{ cliente.nome }}</td>
-    <td>
-      <span *ngFor="let documento of cliente.documentos">
-        <span *ngIf="documento?.tipoDocumento?.nome == 'CPF'">
-          {{ documento.codigo }}
-        </span>
-      </span>
-    </td>
-    <td>
-      <button type="button" (click)="editar(cliente)">Alterar</button>
-      <button type="button" (click)="ativarInativar(cliente)">
-        {{ cliente.ativo ? 'Inativar' : 'Ativar' }}
-      </button>
-    </td>
-  </tr>
-</table>
 </div>

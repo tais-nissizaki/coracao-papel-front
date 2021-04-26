@@ -1,0 +1,23 @@
+<div class="container-fluid mb-3">
+  <h1 class="text-center">Parâmetros do sistemas</h1>
+  <div class="row">
+    <div class="col-4">
+
+      <mat-form-field>
+        <mat-label>Tipo de parâmetro</mat-label>
+        <mat-select [(ngModel)]="tipoParametro">
+          <mat-option value="inativacao-automatica">Inativação automática de produtos</mat-option>
+          <mat-option value="retirada-carrinho">Retirada de itens do carrinho</mat-option>
+          <mat-option value="grupo-precificacao">Grupos de precificação</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <app-inativacao-automatica *ngIf="tipoParametro === 'inativacao-automatica'"></app-inativacao-automatica>
+
+  <app-retirada-carrinho *ngIf="tipoParametro === 'retirada-carrinho'"></app-retirada-carrinho>
+
+  <app-grupo-precificacao *ngIf="tipoParametro === 'grupo-precificacao'"></app-grupo-precificacao>
+
+</div>

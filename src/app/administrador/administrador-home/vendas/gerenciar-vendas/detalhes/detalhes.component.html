@@ -1,0 +1,7 @@
+<h1 mat-dialog-title>Número do pedido: {{pedido.id}}</h1>
+<div mat-dialog-content>
+  <app-detalhe-pedido [pedido]="pedido" [exibirNumeroPedido]="false"></app-detalhe-pedido>
+</div>
+<div mat-dialog-actions class="justify-content-end">
+  <button mat-flat-button color="primary" (click)="close()">Fechar</button>
+</div>
