@@ -24,10 +24,24 @@ import { DocumentoComponent } from './documento/documento.component';
 import { DetalhePedidoComponent } from './detalhe-pedido/detalhe-pedido.component';
 import { PipesModule } from '../pipes/pipes.module';
 import { CartaoComponent } from './cartao/cartao.component';
+import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
+export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
+  align: "right",
+  allowNegative: false,
+  decimal: ",",
+  precision: 2,
+  prefix: "R$ ",
+  suffix: "",
+  thousands: "."
+};
+
 @NgModule({
+  providers:[
+    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig },
+  ],
   declarations: [
     EnderecoComponent, 
     DocumentoComponent,
@@ -47,7 +61,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     MatInputModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     MatDividerModule,
     MatTableModule,
     MatMenuModule,
@@ -56,6 +69,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     MatDialogModule,
     PipesModule,
     NgxMaskModule.forRoot(),
+    CurrencyMaskModule,
   ],
   exports: [
     CartaoComponent,
@@ -82,6 +96,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     MatAutocompleteModule,
     PipesModule, 
     DetalhePedidoComponent,
+    CurrencyMaskModule,
   ]
 })
 export class ComponentsModule { }

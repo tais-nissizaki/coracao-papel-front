@@ -61,27 +61,28 @@ export class PagamentoComponent implements OnInit {
     if(this.verificaCupomJaAdicionado(this.cupomFormControl.value)) {
       return;
     }
-    
+
     if (!this.cupons.find(cupom => cupom.codigo.toLocaleLowerCase() == this.cupomFormControl.value.toLocaleLowerCase())) {
       this.cupomService.verificarCupomValido(this.cupomFormControl.value, this.authStorageService.obterDadosAutenticacao().idCliente)
-        .subscribe(cupom => {
-          if(cupom) {
-            if(!this.verificarCupomDescontoJaAdicionado(cupom)) {
-              this.cupons = [
-                ...this.cupons,
-                cupom
-              ]
+        .subscribe(
+          cupom => { // Integração com sucesso
+            if(cupom) {
+              if(!this.verificarCupomDescontoJaAdicionado(cupom) && !this.verificarCupomDescontoJaUtilizado(cupom)) {
+                this.cupons = [
+                  ...this.cupons,
+                  cupom
+                ]
+                this.cupomFormControl.reset();
+              }
+            } else {
+              this.cupomFormControl.setErrors({'invalido': 'Cupom inválido'})
             }
-          } else {
-            this.cupomFormControl.setErrors({'invalido': 'Cupom inválido'})
+          },
+          (error) => { // Erro na Integração
+            console.error('Erro ao validar o Cupom', error);
+            alert('Erro ao aplicar cupom')
           }
-        },
-        () => console.error('Erro ao validar o Cupom'),
-        () => {
-          if(!this.cupomFormControl.errors) {
-            this.cupomFormControl.reset()
-          }
-        });
+        );
     } else {
       this.cupomFormControl.setErrors({'ja_informado': 'Cupom já informado'})
     }
@@ -103,6 +104,13 @@ export class PagamentoComponent implements OnInit {
     return this.cupomFormControl.errors;
   }
 
+  verificarCupomDescontoJaUtilizado(cupomRecebido: Cupom) {
+    if (cupomRecebido.cliente && cupomRecebido.cliente.utilizado) {
+      this.cupomFormControl.setErrors({'cupom_ja_utilizado': 'Cupom já utilizado'})
+    }
+    return this.cupomFormControl.errors;
+  }
+
   finalizarPedido() {
     if(this.cartoesComponent && this.cartoesComponent.formasPagamento) {
       let formularioInvalido = false;
@@ -115,7 +123,7 @@ export class PagamentoComponent implements OnInit {
           formularioInvalido = true;
         }
         valoresPagamentoInformado += Number((formaPagamento.valor || 0));
-      }) 
+      })
       if(formularioInvalido) {
         alert('Revise as informações de pagamento');
       } else if(Math.round(valoresPagamentoInformado * 100) / 100 != Math.round(this.total * 100) / 100) {
@@ -127,8 +135,8 @@ export class PagamentoComponent implements OnInit {
               alert(mensagem);
             } else {
               this.carrinhoService.excluirCarrinho()
-              .subscribe((mensagem) => {
-                console.log(mensagem);
+              .subscribe((mensagemCarrinho) => {
+                console.log(mensagemCarrinho);
                 this.carrinhoService.excluirCarrinhoLocal()
                 this.router.navigateByUrl('/pedido-realizado/' + mensagem);
               });

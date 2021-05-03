@@ -26,6 +26,9 @@
               <mat-error *ngIf="cupomFormControl.hasError('ja_existe_cupom_promo')">
                 Já foi utilizado um cupom promocional
               </mat-error>
+              <mat-error *ngIf="cupomFormControl.hasError('cupom_ja_utilizado')">
+                Cupom já utilizado
+              </mat-error>
             </mat-form-field>
           </div>
           <div class="col-3">
@@ -34,7 +37,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="d-flex flex-column justify-content-center pt-3">
       <h2 class="text-center">Forma de pagamento</h2>
       <div class="troca container-fluid">
@@ -44,7 +47,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="d-flex flex-column container-fluid resumo mr-3 pt-2">
     <h1 class="text-center">Resumo da compra</h1>
     <div class="row">
@@ -65,15 +68,15 @@
       <div class="col-8">Frete</div>
       <div class="col-4 text-right">{{ valorFrete | currency:'BRL' }}</div>
     </div>
-    
+
     <div class="row border-top border-dark">
       <div class="col-8">Total</div>
       <div class="col-4 text-right">{{ total | currency:'BRL' }}</div>
     </div>
-    
+
     <div class="row mt-4">
       <div class="col text-center">
-        <button type="button" mat-flat-button color="primary" (click)="finalizarPedido()">Finalizar compra</button>
+        <button type="button" mat-flat-button color="primary" class = "btn-finalizar-compra" (click)="finalizarPedido()">Finalizar compra</button>
       </div>
     </div>
   </div>

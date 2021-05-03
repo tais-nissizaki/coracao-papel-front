@@ -51,7 +51,7 @@ const routes: Routes = [
             canActivate: [ClienteAuthGuardService]
           },
           {
-            path: 'pedidos/confirmacao-troca',
+            path: 'pedidos/confirmacao-troca/:idPedido',
             component: ConfirmacaoTrocaComponent,
             canActivate: [ClienteAuthGuardService]
           },

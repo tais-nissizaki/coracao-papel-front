@@ -21,6 +21,7 @@ import { PedidosComponent } from './meu-perfil/pedidos/pedidos.component';
 import { DadosBasicosComponent } from './meu-perfil/dados-basicos/dados-basicos.component';
 import { ConfirmacaoTrocaComponent } from './meu-perfil/pedidos/confirmacao-troca/confirmacao-troca.component';
 import { CuponsComponent } from './meu-perfil/cupons/cupons.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -51,6 +52,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     FormsModule,
     PipesModule,
     NgxMaskModule.forRoot(),
+    CurrencyMaskModule,
   ],
 })
 export class MainModule { }

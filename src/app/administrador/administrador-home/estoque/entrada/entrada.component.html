@@ -5,7 +5,7 @@
     <div class="col-4">
       <mat-form-field>
         <mat-label>Fornecedor</mat-label>
-        <mat-select placeholder="Selecione" formControlName="fornecedor" [compareWith]="fornecedorEquals">
+        <mat-select placeholder="Selecione" formControlName="fornecedor">
           <mat-option *ngFor="let fornecedor of fornecedores" [value]="fornecedor">{{ fornecedor?.cnpj | cpfCnpj:'cnpj'}} - {{ fornecedor.razaoSocial }}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -40,10 +40,8 @@
     </div>
     <div class="col-2">
       <mat-form-field>
-        <mat-label>Valor de custo</mat-label>
-        <input type="text" matInput formControlName="valor" mask="separator.2" thousandSeparator="." separatorLimit="1000" prefix>
-        <!-- <input type="text" matInput formControlName="quantidade"> -->
-        <!-- {{ formEstoque.get('valor').hasError('required') }} -->
+        <mat-label>Valor de custo unitário</mat-label>
+        <input type="text" matInput currencyMask formControlName="valor" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" maxlength="10">
         <mat-error *ngIf="formEstoque.get('valor').hasError('required')">
           Informe a o valor de custo
         </mat-error>
@@ -59,7 +57,7 @@
 
 <div class="container-fluid mt-3">
   <div class="row">
-    <div class="col text-center">
+    <div class="col">
       <table mat-table [dataSource]="itemsAdicionados" class="mat-elevation-z2 table-produtos">
         <ng-container matColumnDef="produto">
           <th mat-header-cell *matHeaderCellDef>Produto</th>

@@ -49,7 +49,7 @@
       </h2>
     </mat-card-header>
     <mat-card-content>
-      
+
       <table mat-table [dataSource]="pedidos" class="mat-elevation-z2 mt-4 vendas-table">
         <ng-container matColumnDef="numeroPedido">
           <th mat-header-cell *matHeaderCellDef class="numero-pedido">Número do pedido</th>
@@ -61,24 +61,24 @@
         </ng-container>
         <ng-container matColumnDef="endereco">
           <th mat-header-cell *matHeaderCellDef class="endereco">Endereco</th>
-          <td mat-cell *matCellDef="let pedido"> {{ pedido.enderecoEntrega.endereco | enderecoCompleto }} </td>
+          <td mat-cell *matCellDef="let pedido"> {{ pedido.enderecoEntrega?.endereco | enderecoCompleto }} </td>
         </ng-container>
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>Situação</th>
-          <td mat-cell *matCellDef="let pedido"> {{ pedido.statusPedido.descricao }} </td>
+          <td mat-cell *matCellDef="let pedido">{{ pedido.statusPedido.descricao }} - {{ obterDataStatus(pedido.transacoesPedido) | date:'dd/MM/yyyy HH:mm:ss':'pr-BR' }}</td>
         </ng-container>
         <ng-container matColumnDef="acoes">
           <th mat-header-cell *matHeaderCellDef class="action">Ações</th>
           <td mat-cell *matCellDef="let pedido;">
-            <button mat-icon-button [matMenuTriggerFor]="menu" class="btn-menu-acao-{{ pedido.numero }}">
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="btn-menu-acao-{{ pedido.id }}">
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
               <button mat-menu-item type="button" class="btn-menu-acao-detalhes-{{ pedido.id }}" (click)="detalhesPedido(pedido)">Detalhes</button>
-              <button mat-menu-item type="button" class="btn-menu-acao-enviar-{{ pedido.id }}" (click)="aprovarPagamento(pedido)" *ngIf="pedido.statusPedido.id==1">Aprovar pagamento</button>
+              <button mat-menu-item type="button" class="btn-menu-acao-aprovar-{{ pedido.id }}" (click)="aprovarPagamento(pedido)" *ngIf="pedido.statusPedido.id==1">Aprovar pagamento</button>
               <button mat-menu-item type="button" class="btn-menu-acao-enviar-{{ pedido.id }}" (click)="enviarPedido(pedido)" *ngIf="pedido.statusPedido.id==2">Enviar pedido</button>
               <button mat-menu-item type="button" class="btn-menu-acao-entregue-{{ pedido.id }}" (click)="efetivarEntrega(pedido)" *ngIf="pedido.statusPedido.id==3">Pedido entregue</button>
-              <button mat-menu-item type="button" class="btn-menu-acao-aprovar-troca-{{ pedido.id }}" (click)="aprovarSolicitacaoTroca()" *ngIf="pedido.statusPedido.id==6">Aprovar solicitação de troca</button>
+              <button mat-menu-item type="button" class="btn-menu-acao-aprovar-troca-{{ pedido.id }}" (click)="aprovarSolicitacaoTroca(pedido)" *ngIf="pedido.statusPedido.id==6">Aprovar solicitação de troca</button>
               <button mat-menu-item type="button" class="btn-menu-acao-confirmar-devolucao-{{ pedido.id }}" (click)="efetivarDevolucaoTroca(pedido)" *ngIf="pedido.statusPedido.id==7">Confirmar devolução</button>
             </mat-menu>
           </td>

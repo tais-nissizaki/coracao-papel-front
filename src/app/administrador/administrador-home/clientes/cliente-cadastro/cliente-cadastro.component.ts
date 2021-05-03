@@ -10,6 +10,8 @@ import { ClienteService } from 'src/app/services/cliente.service';
   styleUrls: ['./cliente-cadastro.component.css']
 })
 export class ClienteCadastroComponent implements OnInit {
+  generos: Genero[] = [];
+  tiposTelefone: TipoTelefone[] = [];
   cadastroForm!: FormGroup;
   tiposCliente: TipoCliente[] = [];
 
@@ -39,16 +41,18 @@ export class ClienteCadastroComponent implements OnInit {
   ) {
     
     this.cadastroForm = formBuilder.group({
-      // genero: [null, [Validators.required]],
-      // email: [null, [Validators.required]],
+      email: [null, [Validators.required]],
+      usuario: formBuilder.group({
+        senha: [null, [Validators.required]],
+        confirmacaoSenha: [null, [Validators.required]]
+      }),
+      genero: [null, [Validators.required]],
       nome: [null, [Validators.required]],
       tipoCliente: [null, [Validators.required]],
-      // dataNascimento: [null, [Validators.required]],
+      dataNascimento: [null, [Validators.required]],
       // cpf: [null, [Validators.required]],
-      // tipoTelefone: [null, [Validators.required]],
-      // telefone: [null, [Validators.required]],
-      // senha: [null, [Validators.required]],
-      // confirmacaoSenha: [null, [Validators.required]],
+      tipoTelefone: [null, [Validators.required]],
+      telefone: [null, [Validators.required]],
     });
   }
 
@@ -58,17 +62,40 @@ export class ClienteCadastroComponent implements OnInit {
       .subscribe((tiposCliente) => {
         this.tiposCliente = tiposCliente;
       });
+
+      this.clienteSevice
+        .obterGeneros()
+        .subscribe(generos => this.generos = generos);
+        
+      this.clienteSevice
+        .obterTiposTelefone()
+        .subscribe(tiposTelefone => this.tiposTelefone = tiposTelefone)
     this.route.paramMap.subscribe(params => {
       this.clienteSevice.pesquisarCliente({id: +params.get('id')} as Cliente)
       .subscribe(clientes => {
         this.id = params.get('id'); 
         this.cadastroCliente = clientes[0];
         this.cadastroForm = this.formBuilder.group({
+          
+          email: [this.cadastroCliente.email, [Validators.required]],
+          usuario: this.formBuilder.group({
+            senha: [this.cadastroCliente.usuario.senha, [Validators.required]],
+            confirmacaoSenha: [this.cadastroCliente.usuario.confirmacaoSenha, [Validators.required]]
+          }),
+          genero: [this.cadastroCliente.genero, [Validators.required]],
           nome: [this.cadastroCliente.nome, [Validators.required]],
           tipoCliente: [this.cadastroCliente.tipoCliente, [Validators.required]],
+          dataNascimento: [this.cadastroCliente.dataNascimento, [Validators.required]],
+          // cpf: [null, [Validators.required]],
+          tipoTelefone: [this.cadastroCliente.telefones[0].tipoTelefone, [Validators.required]],
+          telefone: [this.cadastroCliente.telefones[0].numero, [Validators.required]],
         })
       });
     });
+  }
+
+  get maxDate(): Date {
+    return new Date();
   }
 
   tipoClienteEquals(option, value): boolean {
@@ -100,6 +127,9 @@ export class ClienteCadastroComponent implements OnInit {
 
   sincronizarEnderecos(enderecos: Endereco[]) {
     this.cadastroCliente.enderecos = [...enderecos];
+  }
+  sincronizarCartoes(cartoes: Cartao[]) {
+    this.cadastroCliente.cartoes = [...cartoes];
   }
 
 }

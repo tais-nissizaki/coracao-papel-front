@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -8,7 +9,9 @@ export class ProdutoService {
 
   produtoDetalhe?: Produto;
 
-  constructor() {
+  constructor(
+    private http: HttpClient
+  ) {
   }
 
   pesquisarProduto(produto: Produto): Produto[]{
@@ -53,15 +56,11 @@ export class ProdutoService {
   }
 
   filtrarProdutos(produtoFiltro: string): Observable<Produto[]> {
-    return new Observable(subscriber => {
-      if (produtoFiltro && produtoFiltro.length > 0) {
-        console.log('produtoFiltro', produtoFiltro);
-        const produtos = this.obterProdutos().filter(produto => {
-          return produto.titulo.toLowerCase().includes(produtoFiltro?.toLowerCase() || '')
-        });
-        subscriber.next(produtos);
-        return;
-      }
+    let params = {
+      produto: produtoFiltro,
+    };
+    return this.http.get<Produto[]>('http://localhost:8083/produtos/filtrar', {
+      params: params
     });
   }
 

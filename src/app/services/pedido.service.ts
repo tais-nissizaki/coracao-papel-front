@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthStorageService } from './auth-storage.service';
-import pedidos from './pedidos';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +12,6 @@ export class PedidoService {
     private authStorageService: AuthStorageService,
     private http: HttpClient,
   ) { }
-
-  pedidosAdministrativos: Pedido[] = pedidos;
 
   efetuarPedido(carrinho: Carrinho, formasPagamento: FormaPagamento[], cupons: Cupom[], valorTotal: number, valorFrete: number): Observable<string> {
     const solicitacaoPedido: SolicitacaoPedido = {
@@ -79,7 +75,7 @@ export class PedidoService {
     if (idStatusPedido) {
       params.idStatusPedido = idStatusPedido.toString();
     }
-    if (usuario.permissoes.includes('CLIENTE')) {
+    if (this.authStorageService.ehUsuarioCliente()) {
       url = 'http://localhost:8083/pedidos/cliente/' + usuario.idCliente;
     } else {
       url = 'http://localhost:8083/pedidos';
@@ -124,80 +120,53 @@ export class PedidoService {
         },
       });
   }
-  
-  obterPedidosPorFiltro(idStatus: number): Observable<Pedido[]> {
-    const pedidos = this.pedidosAdministrativos.filter(pedido => pedido.status.id == idStatus);
 
-    return new Observable(subscriber => subscriber.next(pedidos));
+  aprovarTrocaDoPedido(pedido: SolicitacaoPedido) {
+    return this.http.put<string>('http://localhost:8083/pedidos/aprovar-troca-pedido/' + pedido.id, {}, {
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
+  }
+  
+  finalizarTrocaDoPedido(pedido: SolicitacaoPedido) {
+    return this.http.put<string>('http://localhost:8083/pedidos/finalizar-troca-pedido/' + pedido.id, {}, {
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
   }
 
-  obterPedidos(idCliente: number): Observable<Pedido[]> {
-    return new Observable(subscriber => {
-      subscriber.next([
-        {
-          numero: 1235,
-          dataEntrega: new Date(),
-          dataPedido: new Date(),
-          valorFrete: 15.95,
-          valorPedido: 55.85,
-          enderecoEntrega: {
-            id: 12,
-            logradouro: 'Rua Braz Cubas',
-            numero: '10',
-            complemento: 'Casa 2',
-            bairro: 'Centro',
-            cidade: {
-              id: 12,
-              descricao: 'Mogi das Cruzes',
-              estado: {
-                id: 12,
-                descricao: 'SP'
-              }
-            },
-            cep: '08780123',
-            identificadorEndereco: 'Teste',
-            tipoEndereco: {
-              id: 1,
-              descricao: 'Entrega',
-              nome: 'ENTREGA'
-            },
-            tipoLogradouro: 'Rua',
-            tipoResidencia: {
-              id: 1,
-              nome: 'CASA',
-              descricao: 'Casa'
-            },
-          },
-          produtos:  [
-            {
-              quantidade: 1,
-              produto: {
-                id: 1,
-                autor: 'King, Stephen',
-                titulo: 'O Iluminado',
-                valor: 59.90,
-              }
-            }
-          ],
-          status: {
-            id: 2,
-            nome: 'APROVADO',
-            descricao: 'Aprovado'
-          },
-          transacoes: [
-            {
-              id: 1,
-              data: new Date(2021, 2, 1),
-              descricao: 'Aguardando pagamento'
-            },
-            {
-              id: 1,
-              data: new Date(2021, 2, 1),
-              descricao: 'Pagamento aprovado'
-            },
-          ]
-        },
-      ]);
+  solicitarTroca(pedido: SolicitacaoPedido) {
+    let todosSelecionados = true;
+    pedido.itensPedido.forEach(itemPedido => {
+      if(!itemPedido.selecionado) {
+        todosSelecionados = false;
+      }
+    });
+
+    let url = '';
+    let pedidoTroca: SolicitacaoPedido = null;
+    if(todosSelecionados) {
+      url = 'http://localhost:8083/pedidos/trocar-pedido/' + pedido.id;
+      pedidoTroca = pedido;
+    } else {
+      url = 'http://localhost:8083/pedidos/trocar-itens-pedido/' + pedido.id;
+      const itensTroca = pedido.itensPedido.filter(itemPedido => itemPedido.selecionado);
+      let valorTroca = 0;
+      itensTroca.forEach(itemTroca => valorTroca += (itemTroca.quantidade * itemTroca.produto.valor));
+      pedidoTroca = {
+        ...pedido,
+        itensPedido: itensTroca,
+        valorTotal:  valorTroca
+      };
+    }
+
+    return this.http.put<string>(url, pedidoTroca, {
+      headers: {
+        'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+      },
+      responseType: 'text' as 'json'
     })
   }
 }

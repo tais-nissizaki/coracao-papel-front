@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { AuthStorageService } from './auth-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +10,7 @@ import { Observable } from 'rxjs';
 export class CupomService {
 
   constructor(
+    private authStorageService: AuthStorageService,
     private http: HttpClient
   ) { }
 
@@ -20,24 +23,15 @@ export class CupomService {
     return this.http.get<Cupom>(url);
   }
 
-  obterCuponsCliente(idCliente: number, dataInicial?: Date, dataFinal?: Date): Cupom[] {
-    const fimCampanha = new Date();
-    fimCampanha.setFullYear(fimCampanha.getFullYear() +1);
-    return [
-      {
-        codigo: 'TROCA20',
-        inicioCampanha: new Date(2020, 5, 1),
-        utilizado: true,
-        valor: 20,
-        fimCampanha: new Date(2021, 5, 1),
-      },
-      {
-        codigo: 'TROCA5585',
-        inicioCampanha: new Date(),
-        utilizado: false,
-        valor: 55.85,
-        fimCampanha: fimCampanha,
-      },
-    ]
+  obterCuponsCliente(dataInicial?: Date, dataFinal?: Date): Observable<CupomCliente[]> {
+    const idCliente = this.authStorageService.obterDadosAutenticacao().idCliente;
+
+    let params = {
+      dataInicial: dataInicial.toLocaleDateString(),
+      dataFinal: dataFinal.toLocaleDateString()
+    };
+    return this.http.get<CupomCliente[]>('http://localhost:8083/cupons/cliente/' + idCliente, {
+      params: params
+    });
   }
 }

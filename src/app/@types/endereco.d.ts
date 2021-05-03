@@ -3,7 +3,7 @@ interface Endereco {
   identificadorEndereco: string;
   tipoEndereco: TipoEndereco;
   tipoResidencia: TipoResidencia;
-  tipoLogradouro: string;
+  tipoLogradouro: TipoLogradouro;
   logradouro: string;
   numero: string;
   complemento?: string;

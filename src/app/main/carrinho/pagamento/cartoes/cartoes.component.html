@@ -1,8 +1,8 @@
-<div class="row" *ngFor="let formPagamento of formasPagamento">
+<div class="row" *ngFor="let formPagamento of formasPagamento; let i = index">
   <div class="col-8">
     <mat-form-field>
       <mat-label>Selecione o cartão</mat-label>
-      <mat-select placeholder="Selecione" [(ngModel)]="formPagamento.cartao">
+      <mat-select placeholder="Selecione" [(ngModel)]="formPagamento.cartao" class="select-cartao-{{i}}">
         <mat-option *ngFor="let cartao of cartoes" [value]="cartao">{{cartao.bandeiraCartao.descricao}} - {{ cartao.numero }}</mat-option>
       </mat-select>
     </mat-form-field>
@@ -10,7 +10,7 @@
   <div class="col-4">
     <mat-form-field>
       <mat-label>Valor a ser pago com este cartão</mat-label>
-      <input matInput type="number" [(ngModel)]="formPagamento.valor" />
+      <input matInput currencyMask type="text" [(ngModel)]="formPagamento.valor" class="valor-cartao-{{i}}" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }" />
     </mat-form-field>
   </div>
 </div>
@@ -55,7 +55,7 @@
       <div class="col">
         <mat-form-field>
           <mat-label>Nome impresso no cartão</mat-label>
-          <input matInput type="text" class="txt-numero-cartao" formControlName="nomeImpresso"/>
+          <input matInput type="text" class="txt-nome-cartao" formControlName="nomeImpresso"/>
           <mat-error *ngIf="novoCartaoForm.get('nomeImpresso').hasError('required')">
             Informe o nome impresso no cartão
           </mat-error>

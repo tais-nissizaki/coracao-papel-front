@@ -79,6 +79,8 @@ export class CadastroClienteComponent implements OnInit {
       .subscribe((resultado) => {
         if(!`${resultado}`.startsWith('Erro: ')) {
           this.router.navigateByUrl('/login').then(console.log).catch(console.error);
+        } else {
+          alert(resultado)
         }
       });
   }

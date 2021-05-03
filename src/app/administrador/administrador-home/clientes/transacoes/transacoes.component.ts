@@ -21,12 +21,6 @@ export class TransacoesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.pedidoService.obterPedidos(Number(params.get('id'))).subscribe(pedidos => {
-        this.pedidos = pedidos;
-      }) ;
-      
-    })
   }
 
   abrirDetalhes(pedido: Pedido) {

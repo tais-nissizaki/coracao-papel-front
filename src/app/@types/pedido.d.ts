@@ -11,6 +11,7 @@ interface Pedido {
   status?: StatusPedido;
   tipoPedido?: TipoPedido;
   transacoes?: Transacao[];
+  trocaSolicitada?: boolean;
 }
 
 interface SolicitacaoPedido {
@@ -27,6 +28,8 @@ interface SolicitacaoPedido {
   pedidoPagamentos: Pagamento[];
   cupons: CupomPedido[];
   transacoesPedido?: Transacao[];
+  selecionado?: boolean;
+  trocaSolicitada?: boolean;
 }
 
 interface CupomPedido {

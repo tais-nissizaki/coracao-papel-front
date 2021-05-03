@@ -18,8 +18,12 @@ export class EnderecoService {
     return this.http.get<TipoEndereco[]>('http://localhost:8083/tipos-endereco');
   }
 
-  obterEstados(): Observable<Estado[]> {
-    return this.http.get<Estado[]>('http://localhost:8083/estados');
+  obterPaises(): Observable<Pais[]> {
+    return this.http.get<Pais[]>('http://localhost:8083/paises');
+  }
+
+  obterEstados(pais?: Pais): Observable<Estado[]> {
+    return this.http.get<Estado[]>('http://localhost:8083/estados/pais/' + pais?.id);
   }
 
   obterCidades(siglaEstado: string): Observable<Cidade[]> {

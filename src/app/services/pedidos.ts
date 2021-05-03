@@ -26,7 +26,11 @@ const pedidos = [
         descricao: 'Entrega',
         nome: 'ENTREGA'
       },
-      tipoLogradouro: 'Rua',
+      tipoLogradouro: {
+        id: 1,
+        descricao: 'Rua',
+        nome: 'RUA'
+      },
       tipoResidencia: {
         id: 1,
         nome: 'CASA',
@@ -89,7 +93,11 @@ const pedidos = [
         descricao: 'Entrega',
         nome: 'ENTREGA'
       },
-      tipoLogradouro: 'Rua',
+      tipoLogradouro: {
+        id: 1,
+        descricao: 'Rua',
+        nome: 'RUA'
+      },
       tipoResidencia: {
         id: 1,
         nome: 'CASA',
@@ -157,7 +165,11 @@ const pedidos = [
         descricao: 'Entrega',
         nome: 'ENTREGA'
       },
-      tipoLogradouro: 'Rua',
+      tipoLogradouro: {
+        id: 1,
+        descricao: 'Rua',
+        nome: 'RUA'
+      },
       tipoResidencia: {
         id: 1,
         nome: 'CASA',
@@ -235,7 +247,11 @@ const pedidos = [
         descricao: 'Entrega',
         nome: 'ENTREGA'
       },
-      tipoLogradouro: 'Rua',
+      tipoLogradouro: {
+        id: 1,
+        descricao: 'Rua',
+        nome: 'RUA'
+      },
       tipoResidencia: {
         id: 1,
         nome: 'CASA',
@@ -318,7 +334,11 @@ const pedidos = [
         descricao: 'Entrega',
         nome: 'ENTREGA'
       },
-      tipoLogradouro: 'Rua',
+      tipoLogradouro: {
+        id: 1,
+        descricao: 'Rua',
+        nome: 'RUA'
+      },
       tipoResidencia: {
         id: 1,
         nome: 'CASA',

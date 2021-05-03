@@ -30,6 +30,7 @@ import { RelatorioVendasPorFaixaEtariaComponent } from './administrador-home/rel
 import { RelatorioVendasPorGeneroComponent } from './administrador-home/relatorios/relatorio-vendas/relatorio-vendas-por-genero/relatorio-vendas-por-genero.component';
 import { RelatorioVendasPorTipooClienteComponent } from './administrador-home/relatorios/relatorio-vendas/relatorio-vendas-por-tipoo-cliente/relatorio-vendas-por-tipoo-cliente.component';
 import { RelatorioVendasPorPeriodoComponent } from './administrador-home/relatorios/relatorio-vendas/relatorio-vendas-por-periodo/relatorio-vendas-por-periodo.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -67,7 +68,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     VendasModule,
     CuponsModule,
     PipesModule,
-    NgxMaskModule.forRoot(),
+    NgxMaskModule.forRoot(),  
   ]
 })
 export class AdministradorModule { }

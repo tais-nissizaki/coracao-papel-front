@@ -11,7 +11,7 @@ import { DatasService } from '../../services/datas.service';
 })
 export class DocumentoComponent implements OnInit {
   colunasExibidas: string[] = ['nomeTipoDocumento', 'codigo', 'validade', 'acoes'];
-  documentos: Documento[] = [];
+  @Input() documentos?: Documento[] = [];
   @Output("sincronizarDocumentos") sincronizarDocumentos = new EventEmitter();
 
   documentoCadastroFormGroup: FormGroup;

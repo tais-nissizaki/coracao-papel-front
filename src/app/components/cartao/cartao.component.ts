@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CartaoService } from '../../services/cartao.service';
 
@@ -14,7 +14,7 @@ export class CartaoComponent implements OnInit {
   currentIndex = -1;
   bandeiras: BandeiraCartao[] = [];
   tiposCartao: TipoCartao[] = [];
-  cartoes: Cartao[] = [];
+  @Input() cartoes?: Cartao[] = [];
   colunasExibidas: string[] = ['bandeira', 'tipo', 'numero', 'validade', 'acoes'];
   
   @Output() sincronizarCartoes = new EventEmitter<Cartao[]>();
@@ -47,7 +47,18 @@ export class CartaoComponent implements OnInit {
   }
 
   formatarValidade(validade: string) {
-    return validade.substring(0, 2) + '/' + validade.substring(2);
+    if(validade) {
+      const v = validade.replace(/\D/g, '');
+      if(v.length > 6) {
+        const d = new Date(validade);
+        console.log(d)
+        return v.substring(4, 6) + '/' + v.substring(0, 4);
+      } else {
+        return validade.substring(0, 2) + '/' + validade.substring(2);
+      }
+    } else {
+      return '';
+    }
   }
 
   novo() {

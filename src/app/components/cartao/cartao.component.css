@@ -8,5 +8,11 @@ mat-card {
 }
 .cartoes-table th {
   background-color: RGB(86, 91, 159);
-  color: white
+  color: white;
+}
+.action {
+  width: 15%;
+}
+.action-button {
+  background-color: #c5cae9;
 }

@@ -7,7 +7,11 @@ export class EnderecoCompletoPipe implements PipeTransform {
 
   transform(endereco: Endereco): string {
     if(endereco) {
-      let enderecoCompleto = endereco.logradouro;
+      let enderecoCompleto = '';
+      if(endereco.tipoLogradouro && endereco.tipoLogradouro.descricao) {
+        enderecoCompleto += endereco.tipoLogradouro.descricao + ' ';
+      }
+      enderecoCompleto += endereco.logradouro;
       enderecoCompleto += ', ' + endereco.numero;
       if(endereco.complemento && endereco.complemento.trim().length > 0) {
         enderecoCompleto += ', ' + endereco.complemento;

@@ -6,4 +6,11 @@ interface Cupom {
   inicioCampanha: Date;
   fimCampanha?: Date;
   utilizado?: boolean; // Identifica se o cliente já utilizou o cupom, para não usar mais de uma vez em diversas compras
+  cliente?: CupomCliente;
+}
+
+interface CupomCliente {
+  cupom: Cupom;
+  cliente: Cliente;
+  utilizado: boolean;
 }

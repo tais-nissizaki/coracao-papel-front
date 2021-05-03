@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { debounceTime, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
 import { FornecedorService } from 'src/app/services/fornecedor.service';
 import { ProdutoService } from 'src/app/services/produto.service';
 
@@ -38,8 +38,8 @@ export class EntradaComponent implements OnInit {
 
     this.produtosFiltrados = this.formEstoque.get('produto').valueChanges
       .pipe(
-        debounceTime(300),
-        startWith(''),
+        filter(searchTerm => searchTerm && searchTerm.length > 2),
+        debounceTime(500),
         switchMap(value => this.produtoService.filtrarProdutos(value))
       );
   }
@@ -57,8 +57,7 @@ export class EntradaComponent implements OnInit {
   }
 
   fornecedorEquals(value, option) {
-    console.log(option);
-    return value.cnpj == option.cnpj
+    return option && value.cnpj == option.cnpj
   }
 
   produtoEquals(value, option) {

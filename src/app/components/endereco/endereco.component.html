@@ -5,7 +5,7 @@
       <table mat-table [dataSource]="enderecos" class="mat-elevation-z2 mt-4 endereco-table">
         <ng-container matColumnDef="tipoEndereco">
           <th mat-header-cell *matHeaderCellDef class="tipo-endereco">Tipo de Endereco</th>
-          <td mat-cell *matCellDef="let endereco"> {{ obterNomeTipoEndereco(endereco.tipoEndereco) }} </td>
+          <td mat-cell *matCellDef="let endereco"> {{ endereco.tipoEndereco.descricao }} </td>
         </ng-container>
         <ng-container matColumnDef="logradouro">
           <th mat-header-cell *matHeaderCellDef>Logradouro</th>
@@ -17,11 +17,11 @@
         </ng-container>
         <ng-container matColumnDef="cidade">
           <th mat-header-cell *matHeaderCellDef>Cidade</th>
-          <td mat-cell *matCellDef="let endereco"> {{ obterNomeCidade(endereco.cidade) }} </td>
+          <td mat-cell *matCellDef="let endereco"> {{ endereco.cidade.descricao }} </td>
         </ng-container>
         <ng-container matColumnDef="estado">
           <th mat-header-cell *matHeaderCellDef class="estado">Estado</th>
-          <td mat-cell *matCellDef="let endereco"> {{ obterSiglaEstado(endereco.estado) }} </td>
+          <td mat-cell *matCellDef="let endereco"> {{ endereco.cidade.estado.descricao }} </td>
         </ng-container>
         <ng-container matColumnDef="acoes">
           <th mat-header-cell *matHeaderCellDef class="action">Ações</th>
@@ -130,7 +130,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-5">
+          <div class="col-4">
             <mat-form-field>
               <mat-label>Bairro</mat-label>
               <input matInput tylpe="text" formControlName="bairro" />
@@ -141,24 +141,43 @@
           </div>
           <div class="col-2">
             <mat-form-field>
+              <mat-label>País</mat-label>
+              <mat-select placeholder="Selecione" formControlName="pais" (selectionChange)="obterEstados()">
+                <mat-option *ngFor="let pais of paises" [value]="pais">{{ pais.descricao }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="enderecoCadastroFormGroup.get('pais').hasError('required')">
+                Informe o país
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field>
               <mat-label>Estado</mat-label>
               <mat-select placeholder="Selecione" formControlName="estado" (selectionChange)="obterCidades()">
-                <mat-option *ngFor="let estado of estados" [value]="estado.id">{{ estado.descricao }}</mat-option>
+                <mat-option *ngFor="let estado of estados" [value]="estado">{{ estado.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('estado').hasError('required')">
                 Informe o estado
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-5">
+          <div class="col-4">
             <mat-form-field>
               <mat-label>Cidade</mat-label>
               <mat-select placeholder="Selecione" formControlName="cidade">
-                <mat-option *ngFor="let cidade of cidades" [value]="cidade.id">{{ cidade.descricao }}</mat-option>
+                <mat-option *ngFor="let cidade of cidades" [value]="cidade">{{ cidade.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('cidade').hasError('required')">
                 Informe a cidade
               </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <mat-form-field>
+              <mat-label>Observação</mat-label>
+              <textarea placeholder="Observação" matInput rows="4"> </textarea>
             </mat-form-field>
           </div>
         </div>

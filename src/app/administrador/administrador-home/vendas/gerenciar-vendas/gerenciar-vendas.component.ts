@@ -48,21 +48,6 @@ export class GerenciarVendasComponent implements OnInit {
     });
   }
 
-  efetivarDevolucaoTroca(pedido: Pedido) {
-    const dialogRef = this.dialog.open(GerenciarTrocaModalComponent, {
-      width: '700px',
-      data: {
-        title: 'Confirmar devolução da troca',
-        pedido: pedido,
-      },
-      disableClose: true
-    });
-    dialogRef.afterClosed().subscribe(value => {
-      this.pesquisado = false;
-      this.statusPedidoFiltro = {} as StatusPedido;
-    });
-  }
-
   aprovarPagamento(pedido: SolicitacaoPedido) {
     const dialogRef = this.dialog.open(ExecutarAcaoComponent, {
       width: '450px',
@@ -82,6 +67,7 @@ export class GerenciarVendasComponent implements OnInit {
               alert('Pagamento aprovado com sucesso.');
               this.pesquisado = false;
               this.statusPedidoFiltro = null;
+              this.pedidos = [];
             }
           })
       }
@@ -107,6 +93,7 @@ export class GerenciarVendasComponent implements OnInit {
               alert('Pedido enviado com sucesso.');
               this.pesquisado = false;
               this.statusPedidoFiltro = null;
+              this.pedidos = [];
             }
           })
       }
@@ -132,13 +119,14 @@ export class GerenciarVendasComponent implements OnInit {
               alert('Pedido entregue com sucesso.');
               this.pesquisado = false;
               this.statusPedidoFiltro = null;
+              this.pedidos = [];
             }
           })
       }
     });
   }
 
-  aprovarSolicitacaoTroca() {
+  aprovarSolicitacaoTroca(pedido: SolicitacaoPedido) {
     const dialogRef = this.dialog.open(ExecutarAcaoComponent, {
       width: '450px',
       data: {
@@ -149,13 +137,50 @@ export class GerenciarVendasComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(value => {
       if (value) {
-        this.pesquisado = false;
-        this.statusPedidoFiltro = {} as StatusPedido;
+        this.pedidoService.aprovarTrocaDoPedido(pedido)
+          .subscribe(retorno => {
+            if(retorno && retorno.includes('Erro')) {
+              alert(retorno);
+            } else {
+              alert('Solicitação de troca aprovada.');
+              this.pesquisado = false;
+              this.statusPedidoFiltro = null;
+              this.pedidos = [];
+            }
+          });
       }
     });
   }
 
+  efetivarDevolucaoTroca(pedido: SolicitacaoPedido) {
+    const dialogRef = this.dialog.open(GerenciarTrocaModalComponent, {
+      width: '700px',
+      data: {
+        title: 'Confirmar devolução da troca',
+        pedido: pedido,
+      },
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(value => {
+      if(value) {
+        this.pedidoService.finalizarTrocaDoPedido(pedido)
+          .subscribe(retorno => {
+            if(retorno && retorno.includes('Erro')) {
+              alert(retorno);
+            } else {
+              alert('Troca efetuada com sucesso.');
+              this.pesquisado = false;
+              this.statusPedidoFiltro = null;
+              this.pedidos = [];
+            }
+          });
+      }
+      this.pesquisado = false;
+      this.statusPedidoFiltro = {} as StatusPedido;
+    });
+  }
+
   obterDataStatus(transacoes: Transacao[]) {
-    return [...transacoes].pop().data;
+    return [...transacoes].pop().dtCadastro;
   }
 }

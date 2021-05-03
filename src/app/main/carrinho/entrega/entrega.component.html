@@ -109,12 +109,23 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-5">
+      <div class="col-4">
         <mat-form-field>
           <mat-label>Bairro</mat-label>
           <input matInput tylpe="text" formControlName="bairro" />
           <mat-error *ngIf="novoEnderecoEntregaFormGroup.get('bairro').hasError('required')">
             Informe o bairro
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-2">
+        <mat-form-field>
+          <mat-label>País</mat-label>
+          <mat-select placeholder="Selecione" formControlName="pais" (selectionChange)="obterEstados()">
+            <mat-option *ngFor="let pais of paises" [value]="pais">{{ pais.descricao }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="novoEnderecoEntregaFormGroup.get('pais').hasError('required')">
+            Informe o país
           </mat-error>
         </mat-form-field>
       </div>
@@ -129,7 +140,7 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div class="col-5">
+      <div class="col-4">
         <mat-form-field>
           <mat-label>Cidade</mat-label>
           <mat-select placeholder="Selecione" formControlName="cidade">
@@ -138,6 +149,14 @@
           <mat-error *ngIf="novoEnderecoEntregaFormGroup.get('cidade').hasError('required')">
             Informe a cidade
           </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>Observação</mat-label>
+          <textarea placeholder="Observação" matInput rows="4"> </textarea>
         </mat-form-field>
       </div>
     </div>

@@ -18,6 +18,7 @@ export class EntregaComponent implements OnInit {
   novoEnderecoEntregaFormGroup: FormGroup;
   desejaCadastrarEnderecoControl = new FormControl(false);
   exibirFormularioNovoEndereco = false;
+  paises!: Pais[];
   estados: Estado[] = [];
   cidades: Cidade[] = [];
 
@@ -49,12 +50,14 @@ export class EntregaComponent implements OnInit {
       bairro: ['', [Validators.required]],
       cidade: ['', [Validators.required]],
       estado: ['', [Validators.required]],
+      pais: [null, [Validators.required]],
       desejaCadastrarEndereco: [false],
     });
   }
 
   ngOnInit(): void {
-    this.enderecoService.obterEstados().subscribe(estados => this.estados = estados);
+    this.enderecoService.obterPaises().subscribe(paises => this.paises = paises);
+    // this.enderecoService.obterEstados().subscribe(estados => this.estados = estados);
     this.enderecoService.obterTiposEndereco().subscribe(tiposEndereco => this.tiposEnderecos = tiposEndereco);
     this.enderecoService.obterTiposResidencia().subscribe(tiposResidencia => this.tiposResidencia = tiposResidencia);
     this.enderecoService.obterTiposLogradouro().subscribe(tiposLogradouro => this.tiposLogradouro = tiposLogradouro);
@@ -62,6 +65,12 @@ export class EntregaComponent implements OnInit {
   
   tipoEnderecoEquals(option, value) {
     return value && option.id == value.id;
+  }
+
+  obterEstados() {
+    this.enderecoService
+      .obterEstados(this.novoEnderecoEntregaFormGroup.value.pais)
+      .subscribe(estados => this.estados = estados);
   }
 
   obterCidades() {

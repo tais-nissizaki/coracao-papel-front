@@ -7,7 +7,7 @@ import {
 } from '../../../../../types/endereco';
 
 @Component({
-  selector: 'app-endereco',
+  selector: 'app-endereco-old',
   templateUrl: './endereco.component.html',
   styleUrls: ['./endereco.component.css']
 })

@@ -10,12 +10,13 @@ import { VerificaEnderecoCobrancaValidation } from '../../validations/existe-end
 })
 export class EnderecoComponent implements OnInit {
   colunasExibidas: string[] = ['logradouro', 'numero', 'tipoEndereco', 'cidade', 'estado', 'acoes'];
-  enderecos: Endereco[] = [];
+  @Input() enderecos?: Endereco[] = [];
   @Output() sincronizarEnderecos = new EventEmitter();
 
   editMode = false;
   enderecoCadastroFormGroup: FormGroup;
-  estados!: Estado[];
+  paises!: Pais[];
+  estados: Estado[] = [];
   cidades: Cidade[] = [];
 
   tiposEnderecos: TipoEndereco[] = [];
@@ -40,13 +41,8 @@ export class EnderecoComponent implements OnInit {
       bairro: ['', [Validators.required]],
       cidade: ['', [Validators.required]],
       estado: ['', [Validators.required]],
+      pais: [null, [Validators.required]],
     })
-    this.enderecoService
-      .obterEstados()
-      .subscribe(
-        estados => this.estados = estados,
-        console.log
-      );
    }
 
   ngOnInit(): void {
@@ -57,6 +53,7 @@ export class EnderecoComponent implements OnInit {
     )
     this.enderecoService.obterTiposResidencia().subscribe(tiposResidencia => this.tiposResidencia = tiposResidencia);
     this.enderecoService.obterTiposLogradouro().subscribe(tiposLogradouro => this.tiposLogradouro = tiposLogradouro);
+    this.enderecoService.obterPaises().subscribe(paises => this.paises = paises);
   }
   
   tipoEnderecoEquals(option, value) {
@@ -80,6 +77,7 @@ export class EnderecoComponent implements OnInit {
       bairro: '',
       cidade: '',
       estado: '',
+      pais: null,
     });
   }
 
@@ -154,18 +152,19 @@ export class EnderecoComponent implements OnInit {
     return !this.enderecos.find(endereco => endereco.tipoEndereco.nome == 'COBRANCA');
   }
 
+  obterEstados() {
+    this.enderecoService
+      .obterEstados(this.enderecoCadastroFormGroup.value.pais)
+      .subscribe(estados => this.estados = estados);
+  }
+
   obterCidades() {
-    const idEstado = this.enderecoCadastroFormGroup.value.estado;
-    for(let i=0; i< this.estados.length; i++) {
-      if(this.estados[i].id == idEstado) {
-        this.enderecoService.obterCidades(this.estados[i].descricao)
-          .subscribe(
-            (retornoCidades) => {
-              this.cidades = retornoCidades;
-            }
-          )
-      }
-    }
+    this.enderecoService.obterCidades(this.enderecoCadastroFormGroup.value.estado.descricao)
+      .subscribe(
+        (retornoCidades) => {
+          this.cidades = retornoCidades;
+        }
+      )
   }
   
 }

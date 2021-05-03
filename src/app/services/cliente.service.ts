@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthStorageService } from './auth-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +9,9 @@ import { Observable } from 'rxjs';
 export class ClienteService {
 
   constructor(
-    private http: HttpClient,) {
-  }
+    private http: HttpClient,
+    private authStorageService: AuthStorageService,
+  ) { }
 
   obterTiposCliente(): Observable<TipoCliente[]> {
     return this.http.get<TipoCliente[]>('http://localhost:8083/tipos-cliente');
@@ -41,9 +43,6 @@ export class ClienteService {
       enderecos: cadastroCliente.enderecos.map(endereco => {
         return {
           ...endereco,
-          cidade: {
-            id: endereco.cidade
-          },
         }
       }),
       documentos: cadastroCliente.documentos,
@@ -59,18 +58,48 @@ export class ClienteService {
   }
 
   private formatarDataValidadeCartao(validade: string) {
-    return validade.substring(2) + '-' +validade.substring(0,2) + '-01';
+    if(validade) {
+      const v = validade.replace(/\D/g, '');
+      if(v.length > 6) {
+        return v.substring(0, 4) + '-' +v.substring(4, 6) + '-01';
+      } else {
+        return validade.substring(2) + '-' +validade.substring(0,2) + '-01';
+      }
+
+    } else {
+      return validade;
+    }
   }
 
   alterarCliente(cadastroCliente: Cliente): Observable<any> {
     console.log(cadastroCliente);
-    return this.http.put('http://localhost:8083/clientes/'+cadastroCliente.id, {
-      nome: cadastroCliente.nome,
-      ativo: cadastroCliente.ativo,
-      tipoCliente: cadastroCliente.tipoCliente,
-      enderecos: cadastroCliente.enderecos,
+    const cliente = { 
+      ...cadastroCliente,
+      usuario: {
+        ...cadastroCliente.usuario,
+        nomeUsuario: cadastroCliente.email,
+      },
+      ativo: true,
+      telefones: [
+        {
+          numero: cadastroCliente.telefone,
+          tipoTelefone: cadastroCliente.tipoTelefone
+        }
+      ],
+      enderecos: cadastroCliente.enderecos.map(endereco => {
+        return {
+          ...endereco,
+        }
+      }),
       documentos: cadastroCliente.documentos,
-    },
+      cartoes: cadastroCliente.cartoes.map(cartao => {
+        return {
+          ...cartao,
+          dataValidade: this.formatarDataValidadeCartao(cartao.validade || cartao.dataValidade)
+        }
+      })
+    };
+    return this.http.put('http://localhost:8083/clientes/'+cadastroCliente.id, cliente,
     {responseType: 'text'});
   }
 
@@ -79,7 +108,11 @@ export class ClienteService {
     if(filtroCliente.nome) {
       return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar/nome/' + filtroCliente.nome);
     } else if(filtroCliente.id) {
-      return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar/id/' + filtroCliente.id);
+        return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar/id/' + filtroCliente.id, {
+          headers: {
+            'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+          },
+        });
     }
   }
   

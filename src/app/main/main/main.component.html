@@ -13,7 +13,7 @@
                 <a href="#" mat-menu-item [routerLink]="'/login'" class="btn-perfil-menu-login" *ngIf="!estaAutenticado()">Login</a>
                 <a href="#" mat-menu-item [routerLink]="'/cadastro'" *ngIf="!estaAutenticado()">Criar meu cadastro</a>
                 <a href="#" mat-menu-item [routerLink]="'/meu-perfil'" class="btn-perfil-menu-perfil" *ngIf="estaAutenticado()">Meu perfil</a>
-                <a href="#" mat-menu-item (click)="logout()" class="btn-perfil-menu-perfil" *ngIf="estaAutenticado()">Sair</a>
+                <a href="#" mat-menu-item (click)="logout()" class="btn-perfil-menu-perfil-sair" *ngIf="estaAutenticado()">Sair</a>
             </mat-menu>
         </button>
     </div>

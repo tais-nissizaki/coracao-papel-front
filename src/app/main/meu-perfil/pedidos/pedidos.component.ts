@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 import { DatasService } from '../../../services/datas.service';
 
 import { PedidoService } from '../../../services/pedido.service';
@@ -81,9 +83,22 @@ export class PedidosComponent implements OnInit {
     }
   }
 
+  podeTrocar(pedido: SolicitacaoPedido) {
+    console.log(pedido);
+    return pedido.statusPedido && pedido.statusPedido.id == 4 && !pedido.trocaSolicitada;
+  }
   
   solicitarTrocaPedidoSelecionado() {
-    this.router.navigateByUrl('/meu-perfil/pedidos/confirmacao-troca', {state: {data: this.pedido}})
+    this.pedidoService.solicitarTroca(this.pedido)
+      .subscribe(
+        retorno => {
+          console.log(retorno);
+          const [ mensagem, idPedido ] = retorno.split(".");
+          alert(mensagem);
+          this.router.navigateByUrl('/meu-perfil/pedidos/confirmacao-troca/' + ''+idPedido.trim());
+        },
+        (err) => alert("Ocorreu um erro ao solicitar a troca do pedido")
+      );
   }
 
 }
