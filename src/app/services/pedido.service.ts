@@ -129,8 +129,12 @@ export class PedidoService {
       });
   }
   
-  finalizarTrocaDoPedido(pedido: SolicitacaoPedido) {
+  finalizarTrocaDoPedido(pedido: SolicitacaoPedido, retornarProdutosEstoque: boolean) {
+    const params = {
+      'retornar-ao-estoque': String(retornarProdutosEstoque)
+    };
     return this.http.put<string>('http://localhost:8083/pedidos/finalizar-troca-pedido/' + pedido.id, {}, {
+        params: params,
         headers: {
           'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
         },

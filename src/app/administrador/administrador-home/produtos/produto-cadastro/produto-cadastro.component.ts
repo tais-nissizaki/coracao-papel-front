@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProdutoService } from '../../../../services/produto.service';
 import { CategoriaProdutoService }from '../../../../services/categoria-produto.service';
+import { GrupoPrecificacaoService }from '../../../../services/grupo-precificacao.service';
+import { pipe } from 'rxjs';
+import { flatMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-produto-cadastro',
@@ -44,8 +47,8 @@ export class ProdutoCadastroComponent implements OnInit {
     private formBuilder: FormBuilder,
     private produtoSevice: ProdutoService,
     private categoriaProdutoService: CategoriaProdutoService,
+    private grupoPrecificacaoService: GrupoPrecificacaoService,
   ) {
-
     this.cadastroForm = formBuilder.group({
       titulo: [null, [Validators.required]],
       grupoPrecificacao: [null, [Validators.required]],
@@ -67,17 +70,17 @@ export class ProdutoCadastroComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.produtoSevice.obterGrupoPrecificacao().subscribe((grupoPrecificacao) => {
-    //   this.gruposPrecificacao = grupoPrecificacao;
-    // });
+    this.grupoPrecificacaoService.obterGruposPrecificacao().subscribe(gruposPrecificacao => this.gruposPrecificacao = gruposPrecificacao);
+    this.categorias = this.categoriaProdutoService.obterCategoriasProduto();
     this.route.paramMap.subscribe(params => {
       if (params.get('id')) {
         this.cadastroProduto.id = Number(params.get('id'));
+        this.produtoSevice.obterProduto(this.cadastroProduto.id)
+          .subscribe(produto => {
+
+          });
       }
     })
-    this.gruposPrecificacao=this.produtoSevice.obterGrupoPrecificacao();
-    this.categorias = this.categoriaProdutoService.obterCategoriasProduto();
-
   }
 
   grupoPrecificacaoEquals(option, value): boolean {

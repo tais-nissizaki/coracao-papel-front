@@ -12,7 +12,6 @@ export class ProdutoComponent implements OnInit {
 
   @Input() produto!: Produto;
   @Input() index!: number;
-
   constructor(
     private router: Router,
     private carrinhoService: CarrinhoService,

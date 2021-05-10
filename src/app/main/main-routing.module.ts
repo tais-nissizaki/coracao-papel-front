@@ -11,6 +11,9 @@ import { MeuPerfilComponent } from './meu-perfil/meu-perfil.component';
 import { ConfirmacaoTrocaComponent } from './meu-perfil/pedidos/confirmacao-troca/confirmacao-troca.component';
 import { PedidosComponent } from './meu-perfil/pedidos/pedidos.component';
 import { ClienteAuthGuardService } from '../services/cliente-auth-guard.service';
+import { EnderecosComponent } from './meu-perfil/enderecos/enderecos.component';
+import { AlterarSenhaComponent } from './meu-perfil/alterar-senha/alterar-senha.component';
+import { CartoesClienteComponent } from './meu-perfil/cartoes-cliente/cartoes-cliente.component';
 
 const routes: Routes = [
   {
@@ -58,6 +61,21 @@ const routes: Routes = [
           {
             path: 'dados-basicos',
             component: DadosBasicosComponent,
+            canActivate: [ClienteAuthGuardService]
+          },
+          {
+            path: 'enderecos',
+            component: EnderecosComponent,
+            canActivate: [ClienteAuthGuardService]
+          },
+          {
+            path: 'cartoes',
+            component: CartoesClienteComponent,
+            canActivate: [ClienteAuthGuardService]
+          },
+          {
+            path: 'alterar-senha',
+            component: AlterarSenhaComponent,
             canActivate: [ClienteAuthGuardService]
           },
           {

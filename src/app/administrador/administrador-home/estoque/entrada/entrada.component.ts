@@ -2,8 +2,10 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
-import { FornecedorService } from 'src/app/services/fornecedor.service';
-import { ProdutoService } from 'src/app/services/produto.service';
+import { FornecedorService } from '../../../../services/fornecedor.service';
+import { ProdutoService } from '../../../../services/produto.service';
+import { CompraService } from '../../../../services/compra.service';
+
 
 @Component({
   selector: 'app-entrada-estoque',
@@ -16,13 +18,14 @@ export class EntradaComponent implements OnInit {
   formFornecedor!: FormGroup;
   produtosFiltrados: Observable<Produto[]>;
 
-  itemsAdicionados: ItemEntradaEstoque[] = [];
+  itemsAdicionados: ItemCompra[] = [];
 
-  colunasItemEstoque = ['produto', 'quantidade', 'valor', 'acao']
+  colunasItemEstoque = ['produto', 'grupo_precificacao', 'percentual', 'quantidade', 'valor', 'acao']
 
   @Output() cancelarEntrada = new EventEmitter();
 
   constructor(
+    private compraService: CompraService,
     private fornecedorService: FornecedorService,
     private produtoService: ProdutoService,
     formBuilder: FormBuilder
@@ -30,7 +33,7 @@ export class EntradaComponent implements OnInit {
     this.formEstoque = formBuilder.group({
       produto: [null, [Validators.required]],
       quantidade: [null, [Validators.required]],
-      valor: [null, [Validators.required]]
+      valorCompra: [null, [Validators.required]]
     })
     this.formFornecedor = formBuilder.group({
       fornecedor: [null],
@@ -53,7 +56,34 @@ export class EntradaComponent implements OnInit {
   }
 
   efetivarEntradaEstoque() {
-    
+    if(!this.formFornecedor.value.fornecedor || !this.formFornecedor.value.fornecedor.id) {
+      this.formFornecedor.get('fornecedor').setErrors({'required': 'Selecione um fornecedor.'})
+      this.formFornecedor.get('fornecedor').markAllAsTouched();
+    } else if(!this.itemsAdicionados || this.itemsAdicionados.length <= 0) {
+      this.formEstoque.get('produto').setErrors({'item-nao-informado':'q'});
+      this.formEstoque.get('quantidade').setErrors({'':''});
+      this.formEstoque.get('valorCompra').setErrors({'':''});
+      this.formEstoque.markAllAsTouched();
+    } else {
+      this.compraService.efetivarCompra({
+        fornecedor: this.formFornecedor.value.fornecedor,
+        itensCompra: this.itemsAdicionados
+      })
+      .subscribe(retorno => {
+        if(retorno && retorno.includes('Erro:')) {
+          alert(retorno)
+        } else {
+          alert('Compra registrada com sucesso.');
+          this.formEstoque.reset();
+          this.formFornecedor.reset();
+          this.itemsAdicionados = [];
+        }
+      },
+      (err) => {
+        console.log(err);
+        alert('Ocorreu uma falha ao efetuar a entrada em estoque dos produtos')
+      });
+    }
   }
 
   fornecedorEquals(value, option) {
@@ -90,7 +120,7 @@ export class EntradaComponent implements OnInit {
     return produto && produto.titulo && produto.id;
   }
 
-  removerItem(itemEstoque: ItemEntradaEstoque) {
+  removerItem(itemEstoque: ItemCompra) {
     this.itemsAdicionados = this.itemsAdicionados.filter((item, index) => this.itemsAdicionados.indexOf(itemEstoque) != index)
   }
 

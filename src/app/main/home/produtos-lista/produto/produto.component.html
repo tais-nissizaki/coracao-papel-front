@@ -2,7 +2,7 @@
   <mat-card class="m-2 mb-4">
     <div class="image-box">
       <a href="" (click)="detalhes($event, produto)">
-        <img mat-card-image [src]="produto.caminhoImagem || '/assets/sem_imagem.png'" [alt]="produto.titulo" >
+        <img mat-card-image [src]="'data:image/jpeg;base64,' + produto.imagem || '/assets/sem_imagem.png'" [alt]="produto.titulo" >
       </a> 
     </div>
     <mat-card-content>
@@ -15,7 +15,8 @@
       <mat-card-title class="mt-3">{{ produto.valor | currency:'BRL':'symbol':'1.2-2' }}</mat-card-title>
     </mat-card-content>
     <mat-card-actions class="d-flex justify-content-center">
-      <button mat-flat-button color="primary" type="button" (click)="adicionarAoCarrinho(produto)" class="btn-add-carrinho-{{index}}">Adicionar ao carrinho</button>
+      <button *ngIf="produto.quantidadeDisponivel > 0" mat-flat-button color="primary" type="button" (click)="adicionarAoCarrinho(produto)" class="btn-add-carrinho-{{index}}">Adicionar ao carrinho</button>
+      <button *ngIf="produto.quantidadeDisponivel <= 0" mat-flat-button type="button" class="btn-add-carrinho-{{index}}">Produto indisponível</button>
     </mat-card-actions>
   </mat-card>
 </div>

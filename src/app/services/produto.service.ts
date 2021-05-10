@@ -14,6 +14,11 @@ export class ProdutoService {
   ) {
   }
 
+  
+  obterProduto(idProduto: number): Observable<Produto[]>{
+    return this.http.get<Produto[]>('http://localhost:8083/produtos/'+idProduto);
+  }
+
   pesquisarProduto(produto: Produto): Produto[]{
     return [
       {
@@ -64,58 +69,8 @@ export class ProdutoService {
     });
   }
 
-  obterProdutos(): Produto[] {
-    return [
-      {
-        id: 1,
-        titulo: 'O Código da Vinci',
-        autor: 'Brown, Dan',
-        valor: 49.90,
-        caminhoImagem: '/assets/codigo_da_vinci.jpg'
-      },
-      {
-        id: 2,
-        titulo: 'Fortaleza Digital',
-        autor: 'Brown, Dan',
-        valor: 39.90,
-        caminhoImagem: '/assets/fortaleza_digital.jpg'
-      },
-      {
-        id: 3,
-        titulo: 'O Pequeno Príncipe',
-        autor: 'de Saint-Exupery, Antoine',
-        valor: 29.90,
-        caminhoImagem: '/assets/o_pequeno_principe.jpg'
-      },
-      {
-        id: 4,
-        titulo: 'O Iluminado',
-        autor: 'King, Stephen',
-        valor: 59.90,
-        caminhoImagem: '/assets/o_iluminado.jpg'
-      },
-      {
-        id: 5,
-        titulo: 'Box Sherlock Holmes',
-        autor: 'Doyle, Arthur Conan',
-        valor: 89.90,
-        caminhoImagem: '/assets/box_sherlock_holmes.jpg'
-      },
-      {
-        id: 6,
-        titulo: 'A divina comédia',
-        autor: 'Alighieri, Dante',
-        valor: 69.90,
-        caminhoImagem: '/assets/a_divina_comedia.jpg'
-      },
-      {
-        id: 7,
-        titulo: 'A revolução dos bichos',
-        autor: 'Orwell, George',
-        valor: 35.90,
-        caminhoImagem: '/assets/a_revolucao_dos_bichos.jpg'
-      },
-    ]
+  obterProdutos(): Observable<Produto[]> {
+    return this.http.get<Produto[]>('http://localhost:8083/produtos');
   }
 
 

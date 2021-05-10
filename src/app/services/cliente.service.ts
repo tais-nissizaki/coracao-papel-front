@@ -128,4 +128,12 @@ export class ClienteService {
       { responseType: 'text'});
   }
 
+  obterCadastroClienteLogado() {
+    return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar/id/' + this.authStorageService.obterDadosAutenticacao().idCliente, {
+          headers: {
+            'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+          },
+        });
+  }
+
 }

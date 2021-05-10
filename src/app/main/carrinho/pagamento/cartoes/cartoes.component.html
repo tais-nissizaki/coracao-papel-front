@@ -17,7 +17,7 @@
 
 <div class="row d-flex justify-content-end">
   <div class="col-4 text-right">
-    <button type="button" mat-flat-button color="accent" class="btn-novo-cartao" (click)="adicionarNovoCartao = true">Cadastrar um novo cartão</button>
+    <button type="button" mat-flat-button color="primary" class="btn-novo-cartao" (click)="adicionarNovoCartao = true">Cadastrar um novo cartão</button>
   </div>
   <div class="col-4 text-right" *ngIf="formasPagamento.length < cartoes.length">
     <button type="button" mat-flat-button color="primary" class="btn-selecionar-outro-cartao" (click)="selecionarNovoCartao()">Selecionar um novo cartão</button>

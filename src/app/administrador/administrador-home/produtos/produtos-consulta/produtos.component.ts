@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { CarrinhoService } from 'src/app/services/carrinho.service';
 import { ProdutoService } from '../../../../services/produto.service';
 import { JustificativaInativacaoComponent } from './justificativa-inativacao/justificativa-inativacao.component';
 
@@ -11,18 +12,40 @@ import { JustificativaInativacaoComponent } from './justificativa-inativacao/jus
 })
 export class ProdutosComponent implements OnInit {
 
-
+  colunasItemEstoque = ['titulo', 'autor', 'grupo-precificacao', 'quantidade', 'quantidade-disponivel', 'acao']
   produtos: Produto[] = [];
+  produtosQuantidadeReservado: Produto[] = [];
   filtroTitulo: string = '';
 
   constructor(
     private produtoService: ProdutoService,
+    private carrinhoService: CarrinhoService,
     private router: Router,
     public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
-    this.produtos = this.produtoService.obterProdutos();
+    this.produtoService.filtrarProdutos('')
+      .subscribe(produtos => {
+        this.produtos = produtos
+        this.carrinhoService.obterCarrinhosPorProduto('')
+          .subscribe(carrinhos => {
+            let produtosReservados: Produto[] = [];
+            carrinhos.forEach(carrinho => {
+              carrinho.itensCarrinho.forEach(itemCarrinho => {
+                produtosReservados.find(p => p.id === itemCarrinho.produto.id);
+    
+                let p: Produto = produtosReservados.find(p => p.id === itemCarrinho.produto.id);
+                if(!p) {
+                  p = { ...itemCarrinho.produto, quantidadeEstoque: 0 };
+                }
+                p.quantidadeEstoque += itemCarrinho.quantidade;
+                produtosReservados.push(p);
+              })
+            });
+            this.produtosQuantidadeReservado = produtosReservados;
+          });
+      });
   }
 
   novo() {
@@ -30,14 +53,28 @@ export class ProdutosComponent implements OnInit {
   }
 
   pesquisar() {
-    console.log(this.filtroTitulo)
-    // this.produtoService.pesquisarProduto({titulo: this.filtroTitulo}).subscribe(
-    //   (retorno) => {
-    //     console.log(retorno);
-    //     this.produtos = retorno;
-    //   }
-    // );
-    this.produtos=this.produtoService.pesquisarProduto({titulo: this.filtroTitulo,autor: '',valor: 0, caminhoImagem: ''});
+    this.produtoService.filtrarProdutos(this.filtroTitulo)
+      .subscribe(produtos => {
+        this.produtos = produtos
+        this.carrinhoService.obterCarrinhosPorProduto(this.filtroTitulo)
+            .subscribe(carrinhos => {
+              let produtosReservados: Produto[] = [];
+              carrinhos.forEach(carrinho => {
+                carrinho.itensCarrinho.forEach(itemCarrinho => {
+                  produtosReservados.find(p => p.id === itemCarrinho.produto.id);
+
+                  let p: Produto = produtosReservados.find(p => p.id === itemCarrinho.produto.id);
+                  if(!p) {
+                    p = { ...itemCarrinho.produto, quantidadeEstoque: 0 };
+                  }
+                  p.quantidadeEstoque += itemCarrinho.quantidade;
+                  produtosReservados.push(p);
+                })
+              });
+              this.produtosQuantidadeReservado = produtosReservados;
+            });
+      });
+    
   }
 
   editar(produto: Produto) {
@@ -71,6 +108,10 @@ export class ProdutosComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
     });
+  }
+
+  calcularQuantidadeDisponivel(produto: Produto): number {
+    return produto.quantidadeEstoque - (this.produtosQuantidadeReservado.find(p => p.id === produto.id)?.quantidadeEstoque || 0)
   }
 
 }

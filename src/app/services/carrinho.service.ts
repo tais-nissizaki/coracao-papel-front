@@ -68,6 +68,8 @@ export class CarrinhoService {
       url = 'http://localhost:8083/carrinho/' + carrinhoLocal.id;
     } else if (idCliente) {
       url = 'http://localhost:8083/carrinho/cliente/' + idCliente;
+    } else {
+      return of({} as Carrinho)
     }
     return this.http
       .get<Carrinho>(url)
@@ -134,6 +136,15 @@ export class CarrinhoService {
         map(carrinhoSalvo => carrinhoSalvo ? carrinhoSalvo : {itensCarrinho: []}),
         tap(carrinhoSalvo => this.carrinhoStorageService.salvarCarrinho(carrinhoSalvo))
       );
+  }
+
+  obterCarrinhosPorProduto(titulo: string) {
+    let params = {
+      titulo: titulo,
+    };
+    return this.http.get<Carrinho[]>('http://localhost:8083/carrinho/produto', {
+      params: params
+    })
   }
   
 }

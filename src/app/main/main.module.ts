@@ -22,6 +22,9 @@ import { DadosBasicosComponent } from './meu-perfil/dados-basicos/dados-basicos.
 import { ConfirmacaoTrocaComponent } from './meu-perfil/pedidos/confirmacao-troca/confirmacao-troca.component';
 import { CuponsComponent } from './meu-perfil/cupons/cupons.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { EnderecosComponent } from './meu-perfil/enderecos/enderecos.component';
+import { AlterarSenhaComponent } from './meu-perfil/alterar-senha/alterar-senha.component';
+import { CartoesClienteComponent } from './meu-perfil/cartoes-cliente/cartoes-cliente.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -42,6 +45,9 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     DadosBasicosComponent,
     ConfirmacaoTrocaComponent,
     CuponsComponent,
+    EnderecosComponent,
+    AlterarSenhaComponent,
+    CartoesClienteComponent,
   ],
   imports: [
     MainRoutingModule,

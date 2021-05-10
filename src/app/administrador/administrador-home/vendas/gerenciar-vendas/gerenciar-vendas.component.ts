@@ -163,7 +163,7 @@ export class GerenciarVendasComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(value => {
       if(value) {
-        this.pedidoService.finalizarTrocaDoPedido(pedido)
+        this.pedidoService.finalizarTrocaDoPedido(pedido, value == 'retornar')
           .subscribe(retorno => {
             if(retorno && retorno.includes('Erro')) {
               alert(retorno);
@@ -174,9 +174,9 @@ export class GerenciarVendasComponent implements OnInit {
               this.pedidos = [];
             }
           });
+          this.pesquisado = false;
+          this.statusPedidoFiltro = {} as StatusPedido;
       }
-      this.pesquisado = false;
-      this.statusPedidoFiltro = {} as StatusPedido;
     });
   }
 

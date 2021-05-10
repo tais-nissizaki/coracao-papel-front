@@ -5,6 +5,8 @@ interface Produto {
   editora?: string;
   valor: number;
   caminhoImagem?: string;
+  imagem?: string;
+  imageBase64?: string;
   categorias?: CategoriaProduto[];
   ano?: string;
   edicao?: string;
@@ -17,6 +19,8 @@ interface Produto {
   profundidade?: string;
   codigoBarras?: string;
   ativo?: boolean;
+  quantidadeEstoque?: number;
+  quantidadeDisponivel?: number;
 }
 
 interface GrupoPrecificacao {

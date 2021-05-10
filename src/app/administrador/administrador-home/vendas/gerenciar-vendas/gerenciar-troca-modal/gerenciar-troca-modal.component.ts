@@ -18,7 +18,7 @@ export class GerenciarTrocaModalComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  fechar(value: boolean) {
-    this.dialogRef.close(value)
+  fechar(operacao?: string) {
+    this.dialogRef.close(operacao)
   }
 }
