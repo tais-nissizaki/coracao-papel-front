@@ -26,7 +26,13 @@ export class ProdutosListaComponent implements OnInit {
         this.carrinhoService.obterCarrinhosPorProduto('')
           .subscribe(carrinhos => {
             let produtosReservados: Produto[] = [];
-            carrinhos.forEach(carrinho => {
+            const carrinhosUnicos: Carrinho[] = [];
+            carrinhos.forEach((carrinho, index, carrinhosArray) => {
+              if(carrinhosUnicos.findIndex(c => c.id == carrinho.id) < 0) {
+                carrinhosUnicos.push(carrinho);
+              }
+            });
+            carrinhosUnicos.forEach(carrinho => {
               carrinho.itensCarrinho.forEach(itemCarrinho => {
                 produtosReservados.find(p => p.id === itemCarrinho.produto.id);
     
@@ -41,7 +47,6 @@ export class ProdutosListaComponent implements OnInit {
             this.produtosQuantidadeReservado = produtosReservados;
             
             this.produtos.forEach(prod => {
-              console.log(prod)
               this.calcularQuantidadeDisponivel(prod)
             });
           });

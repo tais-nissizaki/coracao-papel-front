@@ -124,37 +124,58 @@
           [(ngModel)]="itemPedido.selecionado"
           (ngModelChange)="atualizarTodosSelecionados()"></mat-checkbox>
       </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
     <ng-container matColumnDef="produto">
       <th mat-header-cell *matHeaderCellDef class="produto">Produto</th>
       <td mat-cell *matCellDef="let itemPedido"> {{ itemPedido.produto.titulo }} </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
     <ng-container matColumnDef="quantidade">
       <th mat-header-cell *matHeaderCellDef class="quantidade">Quantidade</th>
-      <td mat-cell *matCellDef="let itemPedido" class="align-middle">
-
+      <td mat-cell *matCellDef="let itemPedido; let i = index;" class="align-middle">
         <span [hidden]="itemPedido.selecionado">
           {{ itemPedido.quantidade }}
         </span>
-        <span [hidden]="!itemPedido.selecionado">
-          <mat-label></mat-label>
-          <mat-form-field appearance="outline" style="width:90px ;">
-            <input type="text" matInput mask="999"  [(ngModel)]="itemPedido.quantidade"/>
-          </mat-form-field>
-        </span>
+        <mat-form-field appearance="outline" style="width:90px ;" [hidden]="!itemPedido.selecionado">
+          <input type="text" matInput mask="999" [(ngModel)]="itemPedido.quantidade" [formControl]="teste(formTroca.controls[i])" />
+        </mat-form-field>
+        <mat-error *ngIf="formTroca.controls[i].getError('required') ">
+          required
+        </mat-error>
+        <mat-error *ngIf="formTroca.controls[i].getError('min') ">
+          A quantidade informada deve ser maior que 0
+        </mat-error>
+        <mat-error *ngIf="formTroca.controls[i].getError('max') ">
+          Quantidade informada é maior que a quantidade do pedido
+        </mat-error>
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        <strong>Valor da devolução: </strong>
       </td>
     </ng-container>
     <ng-container matColumnDef="valor">
       <th mat-header-cell *matHeaderCellDef class="valor">Valor</th>
-      <td mat-cell *matCellDef="let itemPedido">{{ itemPedido.produto.valor * itemPedido.quantidade | currency:'BRL'}} </td>
+      <td mat-cell *matCellDef="let itemPedido">{{ calcularValorItem(itemPedido) | currency:'BRL'}} </td>
+      <td mat-footer-cell *matFooterCellDef>
+          {{ calcularValorTroca(pedido) | currency:'BRL' }}
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="colunasDetalhePedido"></tr>
     <tr mat-row *matRowDef="let row; columns: colunasDetalhePedido;"></tr>
+    <tr mat-footer-row *matFooterRowDef="colunasDetalhePedido"></tr>
   </table>
+  
+  <div class="row" *ngIf="solicatacaoTroca">
+    <div class="col">
+      <small>* O cálculo da devolução está considerando apenas o valor dos produtos com o cupom promocional aplicado.</small>
+    </div>
+  </div>
+
   <div class="row" *ngIf="solicatacaoTroca">
     <div class="col text-right">
-      <button type="button" mat-flat-button color="primary" id="btn-confirmar-solicitacao-troca" (click)="solicitarTrocaPedidoSelecionado()">Solicitar Troca</button>
+      <button type="button" mat-flat-button color="primary" id="btn-confirmar-solicitacao-troca" [disabled]="!formTroca.valid" (click)="solicitarTrocaPedidoSelecionado()">Solicitar Troca</button>
     </div>
   </div>
 

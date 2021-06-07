@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { EnderecoService } from 'src/app/services/endereco.service';
 import { CarrinhoService } from '../../services/carrinho.service';
 
@@ -53,19 +54,43 @@ export class CarrinhoComponent implements OnInit {
 
   adicionarQuantidade(itemCarrinho: ItemCarrinho) {
     this.carrinhoService.adicionarQuantidade(itemCarrinho)
-      .subscribe(console.log);
+      .pipe(
+        finalize(() => this.carrinho = this.carrinhoService.obterCarrinhoLocal())
+      )
+      .subscribe(
+        (retorno) => console.log('Retorno: ', retorno),
+        (error) => this.tratarErro(error)
+      );
   }
 
   reduzirQuantidade(itemCarrinho: ItemCarrinho) {
     this.carrinhoService.reduzirQuantidade(itemCarrinho)
-    .subscribe(console.log);
+    .pipe(
+      finalize(() => this.carrinho = this.carrinhoService.obterCarrinhoLocal())
+    )
+    .subscribe(
+      (retorno) => console.log('Retorno: ', retorno),
+      (error) => this.tratarErro(error)
+    );
   }
 
   alterarQuantidade(itemCarrinho: ItemCarrinho) {
     this.carrinhoService.alterarQuantidade(itemCarrinho)
-    .subscribe(console.log);
+    .pipe(
+      finalize(() => this.carrinho = this.carrinhoService.obterCarrinhoLocal())
+    )
+    .subscribe(
+      (retorno) => console.log('Retorno: ', retorno),
+      (error) => this.tratarErro(error)
+    );
   }
 
+  tratarErro(error: any) {
+    console.error('Erro: ', error);
+    if (error.status == 423) {
+      alert("Não existe estoque disponível para a quantidade solicitada.")
+    }
+  }
 
   removerItem(itemCarrinho: ItemCarrinho) {
     this.carrinhoService.removerItem(itemCarrinho)

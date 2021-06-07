@@ -11,11 +11,15 @@
   padding-right: 30px;
 }
 .quantidade {
-  width: 150px;
+  width: 300px;
 }
 .valor {
   width: 150px;
 }
+
+mat-error {
+  font-size: 11px;
+} 
 
 ::ng-deep .mat-form-field-wrapper {
   padding: 0;

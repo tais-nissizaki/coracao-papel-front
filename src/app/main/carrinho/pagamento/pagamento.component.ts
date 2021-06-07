@@ -153,7 +153,7 @@ export class PagamentoComponent implements OnInit {
     const cupomDesconto = this.cupons.find(cupom => cupom.percentual && cupom.percentual > 0);
     let valorDesconto = 0;
     if(cupomDesconto?.percentual || 0 > 0) {
-      valorDesconto = this.valorProdutos * (cupomDesconto.percentual/100);
+      valorDesconto = Math.round(this.valorProdutos * (cupomDesconto.percentual/100) * 100) / 100;
     }
     return this.valorProdutos - valorDesconto - valorTrocas + this.valorFrete;
   }

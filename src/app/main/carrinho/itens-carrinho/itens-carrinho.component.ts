@@ -17,9 +17,7 @@ export class ItensCarrinhoComponent implements OnInit {
 
   colunasExibidas = ['Produto', 'Qtd', 'acoes', 'Valor']
 
-  constructor(
-    private carrinhoService: CarrinhoService
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
@@ -39,7 +37,8 @@ export class ItensCarrinhoComponent implements OnInit {
     this.removerItemEmitter.emit(itemCarrinho);
   }
 
-  alterarQuantidade(itemCarrinho: ItemCarrinho) {
+  alterarQuantidade(itemCarrinho: ItemCarrinho, $event: Event) {
+    console.log($event);
     this.alterarQuantidadeEmitter.emit(itemCarrinho);
   }
 

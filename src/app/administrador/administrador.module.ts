@@ -9,7 +9,6 @@ import { ProdutosModule } from './administrador-home/produtos/produtos.module';
 import { ParametrosModule } from './administrador-home/parametros/parametros.module';
 import { VendasModule } from './administrador-home/vendas/vendas.module'
 import { DashboardComponent } from './administrador-home/dashboard/dashboard.component';
-import { OutputGraphComponent } from './administrador-home/dashboard/output-graph/output-graph.component';
 import { AdministradorHomeComponent } from './administrador-home/administrador-home.component';
 import { CuponsModule } from './administrador-home/cupons/cupons.module';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
@@ -30,7 +29,6 @@ import { RelatorioVendasPorFaixaEtariaComponent } from './administrador-home/rel
 import { RelatorioVendasPorGeneroComponent } from './administrador-home/relatorios/relatorio-vendas/relatorio-vendas-por-genero/relatorio-vendas-por-genero.component';
 import { RelatorioVendasPorTipooClienteComponent } from './administrador-home/relatorios/relatorio-vendas/relatorio-vendas-por-tipoo-cliente/relatorio-vendas-por-tipoo-cliente.component';
 import { RelatorioVendasPorPeriodoComponent } from './administrador-home/relatorios/relatorio-vendas/relatorio-vendas-por-periodo/relatorio-vendas-por-periodo.component';
-import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -40,7 +38,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     AdministradorHomeComponent,
     LoginComponent,
     DashboardComponent,
-    OutputGraphComponent,
     JustificativaInativacaoComponent,
     EstoqueComponent,
     EntradaComponent,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthStorageService } from '../../services/auth-storage.service';
 
 @Component({
@@ -11,13 +11,10 @@ export class AdministradorHomeComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private activatedRouter: ActivatedRoute,
     private authStorageService: AuthStorageService,
   ) { }
 
-  ngOnInit(): void {
-    console.log(this.activatedRouter.snapshot.url);
-  }
+  ngOnInit(): void { }
 
   sair() {
     this.authStorageService.logout();

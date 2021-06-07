@@ -158,11 +158,16 @@ export class PedidoService {
       url = 'http://localhost:8083/pedidos/trocar-itens-pedido/' + pedido.id;
       const itensTroca = pedido.itensPedido.filter(itemPedido => itemPedido.selecionado);
       let valorTroca = 0;
+
+      let coeficienteCupomDesconto = 1;
+      if(pedido.cupons.find(c => !!c.cupom.percentual)) {
+        coeficienteCupomDesconto = 1 - (pedido.cupons.find(c => !!c.cupom.percentual).cupom.percentual / 100);
+      }
       itensTroca.forEach(itemTroca => valorTroca += (itemTroca.quantidade * itemTroca.produto.valor));
       pedidoTroca = {
         ...pedido,
         itensPedido: itensTroca,
-        valorTotal:  valorTroca
+        valorTotal:  (valorTroca * coeficienteCupomDesconto)
       };
     }
 

@@ -55,6 +55,10 @@ export class CarrinhoService {
       );
   }
 
+  obterCarrinhoLocal() {
+    return this.carrinhoStorageService.obterCarrinho();
+  }
+
   obterDadosCarrinho(): Observable<Carrinho> {
     const carrinhoLocal = this.carrinhoStorageService.obterCarrinho();
     if (carrinhoLocal) {
@@ -131,9 +135,9 @@ export class CarrinhoService {
 
   salvarCarrinho(carrinho: Carrinho) {
     return this.http
-      .put<Carrinho>('http://localhost:8083/carrinho', carrinho)
+      .put<Carrinho>('http://localhost:8083/carrinho', carrinho, { observe: 'response' })
       .pipe(
-        map(carrinhoSalvo => carrinhoSalvo ? carrinhoSalvo : {itensCarrinho: []}),
+        map(carrinhoSalvo => carrinhoSalvo.body ? carrinhoSalvo.body : {itensCarrinho: []}),
         tap(carrinhoSalvo => this.carrinhoStorageService.salvarCarrinho(carrinhoSalvo))
       );
   }

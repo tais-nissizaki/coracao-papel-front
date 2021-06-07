@@ -1,7 +1,6 @@
 interface Telefone {
   tipoTelefone: TipoTelefone;
   numero: string;
-  ramal?: string
 }
 
 interface TipoTelefone {
