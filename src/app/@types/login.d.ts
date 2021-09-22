@@ -24,4 +24,11 @@ interface Usuario {
 interface DadosUsuario {
   permissoes: string[];
   idCliente?: number;
+  ativo: boolean;
+}
+
+interface AlterarSenha {
+  senhaAntiga: string;
+  senha: string;
+  confirmacaoSenha: string;
 }

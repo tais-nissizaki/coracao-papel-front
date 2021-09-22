@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CarrinhoService } from 'src/app/services/carrinho.service';
+import { CategoriaProdutoService } from 'src/app/services/categoria-produto.service';
 import { ProdutoService } from '../../../../services/produto.service';
 import { JustificativaInativacaoComponent } from './justificativa-inativacao/justificativa-inativacao.component';
+import { JustificativaInativacaoData } from './justificativa-inativacao/justificativa.modal.data';
 
 @Component({
   selector: 'app-produtos',
@@ -12,19 +14,27 @@ import { JustificativaInativacaoComponent } from './justificativa-inativacao/jus
 })
 export class ProdutosComponent implements OnInit {
 
-  colunasItemEstoque = ['titulo', 'autor', 'grupo-precificacao', 'quantidade', 'quantidade-disponivel', 'acao']
+  colunasItemEstoque = ['titulo', 'autor', 'grupo-precificacao', 'quantidade', 'quantidade-disponivel', 'status', 'acao']
   produtos: Produto[] = [];
   produtosQuantidadeReservado: Produto[] = [];
+  categorias: CategoriaProduto[] = [];
   filtroTitulo: string = '';
+  filtroAutor: string = '';
+  filtroCategoria: CategoriaProduto = {} as CategoriaProduto;
+  filtroISBN: string = '';
+  filtroEditora: string = '';
+  filtroCodigoBarra: string = '';
 
   constructor(
     private produtoService: ProdutoService,
     private carrinhoService: CarrinhoService,
     private router: Router,
     public dialog: MatDialog,
+    private categoriaProdutoService: CategoriaProdutoService,
   ) { }
 
   ngOnInit(): void {
+    this.categorias = this.categoriaProdutoService.obterCategoriasProduto();
     this.produtoService.filtrarProdutos('')
       .subscribe(produtos => {
         this.produtos = produtos
@@ -53,7 +63,7 @@ export class ProdutosComponent implements OnInit {
   }
 
   pesquisar() {
-    this.produtoService.filtrarProdutos(this.filtroTitulo)
+    this.produtoService.filtrarProdutos(this.filtroTitulo, this.filtroCategoria.id, this.filtroAutor, this.filtroISBN, this.filtroEditora, this.filtroCodigoBarra)
       .subscribe(produtos => {
         this.produtos = produtos
         this.carrinhoService.obterCarrinhosPorProduto(this.filtroTitulo)
@@ -83,29 +93,34 @@ export class ProdutosComponent implements OnInit {
 
   ativarInativar(produto: Produto) {
     console.log(produto);
-    // if(produto.ativo) {
-    //   this.produtoService.inativarProduto(produto).subscribe(
-    //     (retorno) => {
-    //       alert(retorno);
-    //       this.pesquisar();
-    //     }
-    //   );
-    // } else {
-    //   this.produtoService.ativarProduto(produto).subscribe(
-    //     (retorno) => {
-    //       alert(retorno);
-    //       this.pesquisar();
-    //     }
-    //   );
-    // }
 
     const dialogRef = this.dialog.open(JustificativaInativacaoComponent, {
       data: {
-        inativacao: true
+        inativacao: produto.ativo,
+        produto:produto
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result: JustificativaInativacaoData) => {
+      if (result) {
+        if(produto.ativo) {
+          this.produtoService.inativarProduto(produto).subscribe(
+            (retorno) => {
+              alert(retorno);
+              if(!retorno || !retorno.includes('Erro')) {
+                this.pesquisar();
+              }
+            }
+          );
+        } else {
+          this.produtoService.ativarProduto(produto).subscribe(
+            (retorno) => {
+              alert(retorno);
+              this.pesquisar();
+            }
+          );
+        }
+      }
       console.log('The dialog was closed', result);
     });
   }

@@ -10,6 +10,7 @@ import { CupomService } from '../../../services/cupom.service';
 export class CuponsComponent implements OnInit {
 
   periodo: {texto: string, calcularData: (data: Date) => void};
+  flagUtilizado: boolean = false;
   periodos = [
     {
       texto: '1 mês',
@@ -39,11 +40,18 @@ export class CuponsComponent implements OnInit {
 
   ngOnInit(): void {
     this.periodo = this.periodos[0];
+    this.pesquisar();
+  }
+
+  pesquisar() {
     const periodoFinal = new Date();
     let periodoInicial = new Date()
     this.periodo.calcularData(periodoInicial);
-    this.cupomService.obterCuponsCliente(periodoInicial, periodoFinal)
-      .subscribe(cuponsCliente => this.cuponsCliente = cuponsCliente.filter(cupomCliente => !!cupomCliente?.cupom.valor));
+    this.cupomService.obterCuponsCliente(periodoInicial, periodoFinal, !this.flagUtilizado ? undefined : !this.flagUtilizado)
+      .subscribe(cuponsCliente => {
+        this.cuponsCliente = cuponsCliente.filter(cupomCliente => !!cupomCliente?.cupom.valor)
+        console.log(this.cuponsCliente);
+      });
   }
 
 }

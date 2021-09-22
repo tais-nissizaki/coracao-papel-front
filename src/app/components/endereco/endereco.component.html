@@ -40,15 +40,20 @@
         <tr mat-header-row *matHeaderRowDef="colunasExibidas"></tr>
         <tr mat-row *matRowDef="let row; columns: colunasExibidas;"></tr>
       </table>
-      
+<!--       
       <mat-error *ngIf="naoExisteCobranca()">
         Informe ao menos um endereço de cobrança
-      </mat-error>
+      </mat-error> -->
       <div class="d-flex justify-content-end my-3">
-        <button type="button" mat-flat-button color="primary" (click)="novo()">Novo</button>
+        <button type="button" mat-flat-button color="primary" id="btn-novo-endereco" (click)="novo()">Novo</button>
       </div>
 
       <form [formGroup]="enderecoCadastroFormGroup" *ngIf="editMode">
+        
+        <mat-form-field style="display: none">
+          <input matInput type="text" formControlName="id" />
+        </mat-form-field>
+
         <div class="row">
           <div class="col">
             <mat-form-field>
@@ -70,7 +75,7 @@
           <div class="col-4">
             <mat-form-field>
               <mat-label>Tipo de endereco</mat-label>
-              <mat-select placeholder="Selecione" formControlName="tipoEndereco"  [compareWith]="tipoEnderecoEquals">
+              <mat-select placeholder="Selecione" formControlName="tipoEndereco" [compareWith]="equalsObject">
                 <mat-option *ngFor="let tipoEndereco of tiposEnderecos" [value]="tipoEndereco">{{ tipoEndereco.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('tipoEndereco').hasError('required')">
@@ -81,7 +86,7 @@
             <div class="col-4">
               <mat-form-field>
                 <mat-label>Tipo de residência</mat-label>
-              <mat-select placeholder="Selecione" formControlName="tipoResidencia">
+              <mat-select placeholder="Selecione" formControlName="tipoResidencia" [compareWith]="equalsObject">
                 <mat-option *ngFor="let tipoResidencia of tiposResidencia" [value]="tipoResidencia">{{ tipoResidencia.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('tipoResidencia').hasError('required')">
@@ -95,7 +100,7 @@
           <div class="col-3">
             <mat-form-field>
               <mat-label>Tipo de logradouro</mat-label>
-              <mat-select placeholder="Selecione" formControlName="tipoLogradouro">
+              <mat-select placeholder="Selecione" formControlName="tipoLogradouro" [compareWith]="equalsObject">
                 <mat-option *ngFor="let tipoLogradouro of tiposLogradouro" [value]="tipoLogradouro">{{ tipoLogradouro.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('tipoLogradouro').hasError('required')">
@@ -142,7 +147,7 @@
           <div class="col-2">
             <mat-form-field>
               <mat-label>País</mat-label>
-              <mat-select placeholder="Selecione" formControlName="pais" (selectionChange)="obterEstados()">
+              <mat-select placeholder="Selecione" formControlName="pais" (selectionChange)="obterEstados()" [compareWith]="equalsObject">
                 <mat-option *ngFor="let pais of paises" [value]="pais">{{ pais.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('pais').hasError('required')">
@@ -153,7 +158,7 @@
           <div class="col-2">
             <mat-form-field>
               <mat-label>Estado</mat-label>
-              <mat-select placeholder="Selecione" formControlName="estado" (selectionChange)="obterCidades()">
+              <mat-select placeholder="Selecione" formControlName="estado" (selectionChange)="obterCidades()" [compareWith]="equalsObject">
                 <mat-option *ngFor="let estado of estados" [value]="estado">{{ estado.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('estado').hasError('required')">
@@ -164,7 +169,7 @@
           <div class="col-4">
             <mat-form-field>
               <mat-label>Cidade</mat-label>
-              <mat-select placeholder="Selecione" formControlName="cidade">
+              <mat-select placeholder="Selecione" formControlName="cidade" [compareWith]="equalsObject">
                 <mat-option *ngFor="let cidade of cidades" [value]="cidade">{{ cidade.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="enderecoCadastroFormGroup.get('cidade').hasError('required')">
@@ -187,7 +192,7 @@
           <button type="button" mat-flat-button color="warn" (click)="cancelar()">Cancelar</button>
         </div>
         <div class="col-2 d-flex justify-content-end">
-          <button type="button" mat-flat-button color="primary" (click)="adicionarEndereco()">{{ (currentIndex > -1) ? 'Salvar': 'Adicionar' }} </button>
+          <button type="button" mat-flat-button color="primary" id="btn-adicionar-endereco" (click)="adicionarEndereco()">{{ (currentIndex > -1) ? 'Salvar': 'Adicionar' }} </button>
         </div>
       </div>
     </mat-card-content>

@@ -12,7 +12,7 @@
       <div class="col-3">
         <mat-form-field>
           <mat-label>CPF</mat-label>
-          <input matInput placeholder="CPF" mask="000.000.000-00"/>
+          <input matInput placeholder="CPF" [(ngModel)]="filtroCPF" name="filtroCPF" mask="000.000.000-00"/>
         </mat-form-field>
       </div>
       <div class="col-3">
@@ -25,7 +25,7 @@
     
     <div class="row">
       <div class="col d-flex justify-content-end">
-        <button type="button" mat-flat-button color="primary" (click)="pesquisar()">Pesquisar</button>
+        <button type="button" mat-flat-button color="primary" id="btn-pesquisar-clientes" (click)="pesquisar()">Pesquisar</button>
       </div>
     </div>
   </form>

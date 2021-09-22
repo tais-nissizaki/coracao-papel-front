@@ -11,8 +11,8 @@ import { DetalheTransacaoComponent } from './detalhe-transacao/detalhe-transacao
 })
 export class TransacoesComponent implements OnInit {
 
-  colunas = ['numeroPedido', 'data', 'tipo', 'valorPedido', 'valorFrete', 'status', 'ações'];
-  pedidos: Pedido[] = [];
+  colunas = ['numeroPedido', 'data', 'valorPedido', 'valorFrete', 'status', 'ações'];
+  pedidos: SolicitacaoPedido[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -21,10 +21,16 @@ export class TransacoesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.pedidoService.consultarPedidos(undefined, undefined, undefined, Number(params.get('id')))
+      .subscribe(pedidos => {
+        this.pedidos = pedidos;
+      });
+    });
   }
 
   abrirDetalhes(pedido: Pedido) {
-    
+
     const dialogRef = this.dialog.open(DetalheTransacaoComponent, {
       width: '100%',
       data: pedido,

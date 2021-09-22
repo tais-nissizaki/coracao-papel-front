@@ -138,27 +138,29 @@
           {{ itemPedido.quantidade }}
         </span>
         <mat-form-field appearance="outline" style="width:90px ;" [hidden]="!itemPedido.selecionado">
-          <input type="text" matInput mask="999" [(ngModel)]="itemPedido.quantidade" [formControl]="teste(formTroca.controls[i])" />
+          <input type="text" matInput mask="999" [(ngModel)]="itemPedido.quantidade" />
         </mat-form-field>
-        <mat-error *ngIf="formTroca.controls[i].getError('required') ">
+        <mat-error *ngIf="formTroca.controls[i]?.getError('required') ">
           required
         </mat-error>
-        <mat-error *ngIf="formTroca.controls[i].getError('min') ">
+        <mat-error *ngIf="formTroca.controls[i]?.getError('min') ">
           A quantidade informada deve ser maior que 0
         </mat-error>
-        <mat-error *ngIf="formTroca.controls[i].getError('max') ">
+        <mat-error *ngIf="formTroca.controls[i]?.getError('max') ">
           Quantidade informada é maior que a quantidade do pedido
         </mat-error>
       </td>
       <td mat-footer-cell *matFooterCellDef>
-        <strong>Valor da devolução: </strong>
+        <strong *ngIf="solicatacaoTroca">Valor da devolução: </strong>
       </td>
     </ng-container>
     <ng-container matColumnDef="valor">
       <th mat-header-cell *matHeaderCellDef class="valor">Valor</th>
       <td mat-cell *matCellDef="let itemPedido">{{ calcularValorItem(itemPedido) | currency:'BRL'}} </td>
       <td mat-footer-cell *matFooterCellDef>
+        <span *ngIf="solicatacaoTroca">
           {{ calcularValorTroca(pedido) | currency:'BRL' }}
+        </span>
       </td>
     </ng-container>
 
@@ -166,7 +168,7 @@
     <tr mat-row *matRowDef="let row; columns: colunasDetalhePedido;"></tr>
     <tr mat-footer-row *matFooterRowDef="colunasDetalhePedido"></tr>
   </table>
-  
+
   <div class="row" *ngIf="solicatacaoTroca">
     <div class="col">
       <small>* O cálculo da devolução está considerando apenas o valor dos produtos com o cupom promocional aplicado.</small>

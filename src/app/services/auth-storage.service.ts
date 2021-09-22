@@ -66,5 +66,15 @@ export class AuthStorageService {
     const novo = atual + tempoExpiracao;
     return new Date(novo);
   }
+
+  alterarSenhaAutenticacao(senha: string) {
+    const dadosAutenticacao = this.obterDadosAutenticacao();
+    const usuarioSenha = atob(dadosAutenticacao.basicToken);
+    if (usuarioSenha.includes(':')) {
+      const novoUsuarioSenha = usuarioSenha.split(':')[0] + ':' + senha;
+      dadosAutenticacao.basicToken = btoa(novoUsuarioSenha);
+      sessionStorage.setItem(chaveArmazenamentoAutenticacao, btoa(JSON.stringify(dadosAutenticacao)));
+    }
+  }
  
 }

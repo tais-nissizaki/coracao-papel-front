@@ -18,13 +18,14 @@ export class DocumentoComponent implements OnInit {
   tiposDocumento: TipoDocumento[] = [];
   
   editMode = false;
-  currentIndex = 0;
+  currentIndex = -1;
 
   constructor(
     formBuilder: FormBuilder,
     private documentoService: DocumentoService,
     private datasService: DatasService) {
     this.documentoCadastroFormGroup = formBuilder.group({
+      id: [null],
       tipoDocumento: [null, [Validators.required]],
       codigo: ['', [Validators.required]],
       validade: [''],
@@ -51,6 +52,7 @@ export class DocumentoComponent implements OnInit {
     this.currentIndex = -1;
     this.documentoCadastroFormGroup.clearValidators();
     this.documentoCadastroFormGroup.reset({
+      id: null,
       tipoDocumento: null,
       codigo: '',
       validade: '',
@@ -69,6 +71,7 @@ export class DocumentoComponent implements OnInit {
         this.documentos = [
           ...this.documentos.filter(documentoLista => this.documentos.indexOf(documentoLista) != this.currentIndex),
           {
+            id:  this.documentoCadastroFormGroup.value.id,
             tipoDocumento: this.documentoCadastroFormGroup.value.tipoDocumento,
             codigo: this.documentoCadastroFormGroup.value.codigo,
             validade: this.documentoCadastroFormGroup.value.validade
@@ -77,6 +80,7 @@ export class DocumentoComponent implements OnInit {
       } else {
         // this.datasService.formatarData(this.documentoCadastroFormGroup.value.validade);
         const novoDocumento = {
+          id:  this.documentoCadastroFormGroup.value.id,
           tipoDocumento: this.documentoCadastroFormGroup.value.tipoDocumento,
           codigo: this.documentoCadastroFormGroup.value.codigo,
           validade: this.documentoCadastroFormGroup.value.validade

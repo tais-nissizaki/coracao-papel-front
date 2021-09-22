@@ -23,13 +23,21 @@ export class CupomService {
     return this.http.get<Cupom>(url);
   }
 
-  obterCuponsCliente(dataInicial?: Date, dataFinal?: Date): Observable<CupomCliente[]> {
+  obterCuponsCliente(dataInicial?: Date, dataFinal?: Date, flagUtilizado?: boolean): Observable<CupomCliente[]> {
     const idCliente = this.authStorageService.obterDadosAutenticacao().idCliente;
-
-    let params = {
-      dataInicial: dataInicial.toLocaleDateString(),
-      dataFinal: dataFinal.toLocaleDateString()
-    };
+    let params;
+    if (flagUtilizado != undefined) {
+      params = {
+        dataInicial: dataInicial.toLocaleDateString(),
+        dataFinal: dataFinal.toLocaleDateString(),
+        flagUtilizado: flagUtilizado
+      };
+    } else {
+      params = {
+        dataInicial: dataInicial.toLocaleDateString(),
+        dataFinal: dataFinal.toLocaleDateString(),
+      };
+    }
     return this.http.get<CupomCliente[]>('http://localhost:8083/cupons/cliente/' + idCliente, {
       params: params
     });

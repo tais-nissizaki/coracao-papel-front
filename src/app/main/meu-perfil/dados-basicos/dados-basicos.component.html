@@ -24,7 +24,7 @@
         <div class="col-4">
           <mat-form-field>
             <mat-label>Gênero</mat-label>
-            <mat-select placeholder="Selecione" formControlName="genero">
+            <mat-select placeholder="Selecione" formControlName="genero" [compareWith]="equalsObj">
               <mat-option *ngFor="let genero of generos" [value]="genero">{{ genero.descricao }}</mat-option>
             </mat-select>
             <mat-error *ngIf="cadastroForm.get('genero').hasError('required') && form.submitted">
@@ -64,7 +64,7 @@
         <div class="col-4">
           <mat-form-field>
             <mat-label>Tipo do Telefone</mat-label>
-            <mat-select placeholder="Selecione" formControlName="tipoTelefone">
+            <mat-select placeholder="Selecione" formControlName="tipoTelefone" [compareWith]="equalsObj">
               <mat-option *ngFor="let tipoTelefone of tiposTelefone" [value]="tipoTelefone">{{ tipoTelefone.descricao }}
               </mat-option>
             </mat-select>
@@ -76,15 +76,13 @@
         <div class="col-6">
           <mat-form-field>
             <mat-label>Telefone</mat-label>
-            <input matInput placeholder="Telefone" formControlName="telefone" mask="(00) 0000-0000||(00) 0 0000-0000" />
+            <input matInput placeholder="Telefone" formControlName="telefone" mask="(00) 0000-0000 || (00) 0 0000-0000" />
             <mat-error *ngIf="cadastroForm.get('telefone').hasError('required') && form.submitted">
               Informe o telefone
             </mat-error>
           </mat-form-field>
         </div>
       </div>
-
-      
       <app-documento (sincronizarDocumentos)="sincronizarDocumentos($event)" [documentos]="cadastroCliente.documentos"></app-documento>
     </mat-card-content>
     <mat-card-actions>
@@ -94,7 +92,7 @@
           <button mat-flat-button color="warn" (click)="cancelar()">Cancelar</button>
         </div>
         <div class="col-2 d-flex justify-content-end">
-          <button mat-flat-button color="primary" (click)="salvaCliente()">Salvar alterações</button>
+          <button mat-flat-button color="primary" id="btn-salvar-alteracao" (click)="salvaCliente()">Salvar alterações</button>
         </div>
       </div>
     </mat-card-actions>

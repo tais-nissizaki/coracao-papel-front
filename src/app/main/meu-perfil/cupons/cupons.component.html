@@ -3,13 +3,13 @@
   <div class="col-4">
     <mat-form-field>
       <mat-label>Período de consulta</mat-label>
-      <mat-select [(ngModel)]="periodo">
+      <mat-select [(ngModel)]="periodo" (ngModelChange)="pesquisar()">
         <mat-option *ngFor="let p of periodos" [value]="p">{{ p.texto }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
   <div class="col d-flex align-items-center">
-    <mat-checkbox color="primary">Listar apenas cupons disponíveis</mat-checkbox>
+    <mat-checkbox color="primary"  [(ngModel)]="flagUtilizado"  (ngModelChange)="pesquisar()">Listar apenas cupons disponíveis</mat-checkbox>
   </div>
 </div>
     

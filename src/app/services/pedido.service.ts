@@ -57,8 +57,7 @@ export class PedidoService {
     });
   }
 
-  consultarPedidos(dataInicialFiltro?: Date, dataFinalFitlro?: Date, idStatusPedido?: number) {
-    console.log(dataInicialFiltro, dataFinalFitlro, idStatusPedido);
+  consultarPedidos(dataInicialFiltro?: Date, dataFinalFitlro?: Date, idStatusPedido?: number, idCliente?: number) {
     const usuario = this.authStorageService.obterDadosAutenticacao();
     let url = '';
     let params = {
@@ -75,8 +74,8 @@ export class PedidoService {
     if (idStatusPedido) {
       params.idStatusPedido = idStatusPedido.toString();
     }
-    if (this.authStorageService.ehUsuarioCliente()) {
-      url = 'http://localhost:8083/pedidos/cliente/' + usuario.idCliente;
+    if (this.authStorageService.ehUsuarioCliente() || idCliente) {
+      url = 'http://localhost:8083/pedidos/cliente/' + (usuario.idCliente || idCliente);
     } else {
       url = 'http://localhost:8083/pedidos';
     }
@@ -128,7 +127,7 @@ export class PedidoService {
         },
       });
   }
-  
+
   finalizarTrocaDoPedido(pedido: SolicitacaoPedido, retornarProdutosEstoque: boolean) {
     const params = {
       'retornar-ao-estoque': String(retornarProdutosEstoque)

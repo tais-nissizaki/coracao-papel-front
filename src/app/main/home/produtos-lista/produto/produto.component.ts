@@ -26,17 +26,26 @@ export class ProdutoComponent implements OnInit {
       .adicionarProduto(produto)
       .subscribe(carrinho => {
         this.router.navigateByUrl('/carrinho');
-      })
-    ;
+      });
   }
 
   detalhes($event, produto: Produto) {
     $event.preventDefault();
     this.produtoSerice.produtoDetalhe = produto;
-    this.router.navigateByUrl('/produto/1');
+    this.router.navigateByUrl('/produto/'+produto.id);
   }
 
   get btnAdicionarCarrinhoClass(): string {
     return 'btn-add-carrinho-'+this.index;
+  }
+
+  get imageBase64EncodedString(): string {
+    if(!this.produto.imagem) {
+      return '/assets/sem_imagem.png'
+    } else if(this.produto.imagem.includes('data:image') && this.produto.imagem.includes('base64')) {
+      return this.produto.imagem;
+    } else {
+      return 'data:image/jpeg;base64,'+this.produto.imagem;
+    }
   }
 }

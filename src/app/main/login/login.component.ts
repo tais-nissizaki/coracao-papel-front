@@ -48,9 +48,14 @@ export class LoginComponent implements OnInit {
         .subscribe(
           dadosUsuario => {
             if(dadosUsuario && dadosUsuario.permissoes && dadosUsuario.permissoes.length > 0 && dadosUsuario.permissoes.includes("CLIENTE")) {
-              this.authStorageService.guardarDadosAutenticacao(dadosUsuario, this.loginForm.value);
-              this.router.navigateByUrl('/');
-              this.carrinhoService.excluirCarrinhoLocal();
+              if(dadosUsuario.ativo) {
+                this.authStorageService.guardarDadosAutenticacao(dadosUsuario, this.loginForm.value);
+                this.router.navigateByUrl('/');
+                this.carrinhoService.excluirCarrinhoLocal();
+              } else {
+                this.loginForm.controls.email.setErrors({'usuario_senha_invalido': 'Usuário e/ou senha inválidos'});
+                this.loginForm.controls.senha.setErrors({'usuario_senha_invalido': 'Usuário e/ou senha inválidos'});
+              }
             } else {
               this.loginForm.controls.email.setErrors({'erro_login': 'Ocorreu um erro ao tentar efetuar o login'});
               this.loginForm.controls.senha.setErrors({'erro_login': 'Ocorreu um erro ao tentar efetuar o login'});

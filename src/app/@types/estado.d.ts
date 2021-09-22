@@ -1,6 +1,7 @@
 interface Estado {
   id: number;
   descricao: string;
+  pais?: Pais;
 }
 
 interface Pais {

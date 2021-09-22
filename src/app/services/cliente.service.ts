@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core'
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthStorageService } from './auth-storage.service';
+import { map, mergeMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -72,9 +73,12 @@ export class ClienteService {
   }
 
   alterarCliente(cadastroCliente: Cliente): Observable<any> {
-    console.log(cadastroCliente);
+    if(typeof cadastroCliente.dataNascimento == 'string') {
+      cadastroCliente.dataNascimento = new Date(cadastroCliente.dataNascimento);
+    }
     const cliente = { 
       ...cadastroCliente,
+      dataNascimento: cadastroCliente.dataNascimento,
       usuario: {
         ...cadastroCliente.usuario,
         nomeUsuario: cadastroCliente.email,
@@ -103,16 +107,68 @@ export class ClienteService {
     {responseType: 'text'});
   }
 
+  alterarDadosBasicosCliente(cadastroCliente: Cliente): Observable<string> {
+    console.log('Alteração de dados básicos' , cadastroCliente);
+    return this.pesquisarCliente({ id: cadastroCliente.id } as Cliente)
+      .pipe(
+        mergeMap(clientes => {
+          const clienteAlteracao = { 
+            ...clientes[0],
+            ...cadastroCliente,
+            usuario: {
+              ...clientes[0].usuario,
+              nomeUsuario: cadastroCliente.email,
+            },
+            ativo: true,
+            telefones: [
+              {
+                numero: cadastroCliente.telefone,
+                tipoTelefone: cadastroCliente.tipoTelefone
+              }
+            ],
+            documentos: cadastroCliente.documentos,
+          };
+          return this.http.put(
+            'http://localhost:8083/clientes/'+cadastroCliente.id, 
+            clienteAlteracao,
+            {responseType: 'text'}
+          );
+        }),
+        
+      );
+  }
   
   pesquisarCliente(filtroCliente: Cliente): Observable<Cliente[]> {
-    if(filtroCliente.nome) {
-      return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar/nome/' + filtroCliente.nome);
-    } else if(filtroCliente.id) {
+    if(filtroCliente.id) {
         return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar/id/' + filtroCliente.id, {
           headers: {
             'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
           },
         });
+    } else if(filtroCliente.nome || (filtroCliente.documentos && filtroCliente.documentos.length > 0)) {
+      let params: HttpParams = new HttpParams();
+      if(filtroCliente.nome) {
+        params = params.append('nome', filtroCliente.nome)
+      }
+      if (filtroCliente.documentos && filtroCliente.documentos.length > 0 && filtroCliente.documentos[0].codigo) {
+        params = params.append('cpf', filtroCliente.documentos[0].codigo)
+      } 
+      return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar', {
+        params: params,
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
+    // } else if(filtroCliente.nome) {
+    //   const params = {
+    //     nome: filtroCliente.nome,
+    //     cpf: undefined,
+    //   }
+    //   const cpf = filtroCliente.documentos[0]?.codigo;
+    //   if (filtroCliente.documentos && filtroCliente.documentos.length > 0) {
+    //     params.cpf = filtroCliente.documentos[0].codigo;
+    //   } 
+    //   return this.http.get<Cliente[]>('http://localhost:8083/clientes/pesquisar/nome/' + filtroCliente.nome);
     }
   }
   
@@ -134,6 +190,16 @@ export class ClienteService {
             'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
           },
         });
+  }
+  alterarSenha(alterraSenha: AlterarSenha) {
+    return this.http.put('http://localhost:8083/clientes/cliente/' + this.authStorageService.obterDadosAutenticacao().idCliente + '/alterar-senha', 
+      alterraSenha, 
+      {
+        responseType: 'text',
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
   }
 
 }

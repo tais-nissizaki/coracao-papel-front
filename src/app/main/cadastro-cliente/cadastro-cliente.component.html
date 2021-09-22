@@ -80,7 +80,7 @@
                   <mat-form-field>
                     <mat-label>Data de Nascimento</mat-label>
                     <input matInput [max]="maxDate" [matDatepicker]="picker" formControlName="dataNascimento">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker-toggle matSuffix [for]="picker" id="picker-data-nascimento"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     
                     <mat-error *ngIf="cadastroForm.get('dataNascimento').hasError('required') && form.submitted">
@@ -129,7 +129,7 @@
               </div>
               
               <div class="col-2 d-flex justify-content-end">
-                <button mat-flat-button color="primary" (click)="salvaCliente()">Criar o cadastro</button>
+                <button mat-flat-button color="primary" id="btn-cadastrar-cliente" (click)="salvaCliente()">Criar o cadastro</button>
               </div>
             </div>
           </mat-card-actions>

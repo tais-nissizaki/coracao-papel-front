@@ -42,15 +42,14 @@ export class ClienteCadastroComponent implements OnInit {
     
     this.cadastroForm = formBuilder.group({
       email: [null, [Validators.required]],
-      usuario: formBuilder.group({
-        senha: [null, [Validators.required]],
-        confirmacaoSenha: [null, [Validators.required]]
-      }),
+      // usuario: formBuilder.group({
+      //   senha: [null, [Validators.required]],
+      //   confirmacaoSenha: [null, [Validators.required]]
+      // }),
       genero: [null, [Validators.required]],
       nome: [null, [Validators.required]],
       tipoCliente: [null, [Validators.required]],
       dataNascimento: [null, [Validators.required]],
-      // cpf: [null, [Validators.required]],
       tipoTelefone: [null, [Validators.required]],
       telefone: [null, [Validators.required]],
     });
@@ -78,15 +77,14 @@ export class ClienteCadastroComponent implements OnInit {
         this.cadastroForm = this.formBuilder.group({
           
           email: [this.cadastroCliente.email, [Validators.required]],
-          usuario: this.formBuilder.group({
-            senha: [this.cadastroCliente.usuario.senha, [Validators.required]],
-            confirmacaoSenha: [this.cadastroCliente.usuario.confirmacaoSenha, [Validators.required]]
-          }),
+          // usuario: this.formBuilder.group({
+          //   senha: [this.cadastroCliente.usuario.senha, [Validators.required]],
+          //   confirmacaoSenha: [this.cadastroCliente.usuario.confirmacaoSenha, [Validators.required]]
+          // }),
           genero: [this.cadastroCliente.genero, [Validators.required]],
           nome: [this.cadastroCliente.nome, [Validators.required]],
           tipoCliente: [this.cadastroCliente.tipoCliente, [Validators.required]],
-          dataNascimento: [this.cadastroCliente.dataNascimento, [Validators.required]],
-          // cpf: [null, [Validators.required]],
+          dataNascimento: [this.cadastroCliente.dataNascimento + 'T00:00:00', [Validators.required]],
           tipoTelefone: [this.cadastroCliente.telefones[0].tipoTelefone, [Validators.required]],
           telefone: [this.cadastroCliente.telefones[0].numero, [Validators.required]],
         })
@@ -99,7 +97,7 @@ export class ClienteCadastroComponent implements OnInit {
   }
 
   tipoClienteEquals(option, value): boolean {
-    return option.id == value.id;
+    return value && option.id == value.id;
   }
 
   cancelar() {
@@ -113,7 +111,6 @@ export class ClienteCadastroComponent implements OnInit {
     }
     console.log(this.cadastroCliente);
     this.clienteSevice.alterarCliente(this.cadastroCliente).subscribe((resultado) => {
-      console.log(resultado);
       alert(resultado);
       if(!`${resultado}`.startsWith('Erro: ')) {
         this.router.navigateByUrl('/administrador/clientes').then(value => console.log).catch(err => console.error);

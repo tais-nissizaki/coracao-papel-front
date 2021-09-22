@@ -33,11 +33,14 @@
       <tr mat-row *matRowDef="let row; columns: colunasExibidas;"></tr>
     </table>
     <div class="d-flex justify-content-end my-3">
-      <button type="button" mat-flat-button color="primary" (click)="novo($event)">Novo</button>
+      <button type="button" mat-flat-button color="primary" id="btn-novo-documento" (click)="novo($event)">Novo</button>
     </div>
 
     
     <form [formGroup]="documentoCadastroFormGroup" *ngIf="editMode" onsubmit="">
+      <mat-form-field style="display: none;" >
+        <input matInput type="text" formControlName="id" />
+      </mat-form-field>
       <div class="row">
         <div class="col-3">
           <mat-form-field>
@@ -53,7 +56,7 @@
         <div class="col-5">
           <mat-form-field>
             <mat-label>Número/código do documento</mat-label>
-            <input matInput tylpe="text" formControlName="codigo" />
+            <input matInput type="text" formControlName="codigo" />
             <mat-error *ngIf="documentoCadastroFormGroup.get('codigo').hasError('required')">
               Informe o número do documento
             </mat-error>
@@ -76,7 +79,7 @@
           <button type="button" mat-flat-button color="warn" (click)="cancelar()">Cancelar</button>
         </div>
         <div class="col-2 d-flex justify-content-end">
-          <button type="button" mat-flat-button color="primary" (click)="adicionarDocumento($event)">{{ (currentIndex > -1) ? 'Salvar': 'Adicionar' }} </button>
+          <button type="button" mat-flat-button color="primary" id="btn-salvar-documento" (click)="adicionarDocumento($event)">{{ (currentIndex > -1) ? 'Salvar': 'Adicionar' }} </button>
         </div>
       </div>
     </form>

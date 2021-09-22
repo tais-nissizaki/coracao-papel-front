@@ -4,7 +4,6 @@ import { ComponentsModule } from '../../../components/components.module';
 import { ClientesComponent } from './clientes-consulta/clientes.component';
 import { ClienteCadastroComponent } from './cliente-cadastro/cliente-cadastro.component';
 import { EnderecoComponent } from './cliente-cadastro/endereco/endereco.component';
-import { DocumentoComponent } from './cliente-cadastro/documento/documento.component';
 import { PipesModule } from '../../../pipes/pipes.module';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { TransacoesComponent } from './transacoes/transacoes.component';
@@ -18,7 +17,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ClientesComponent,
     ClienteCadastroComponent,
     EnderecoComponent,
-    DocumentoComponent,
     TransacoesComponent,
     DetalheTransacaoComponent,
   ],

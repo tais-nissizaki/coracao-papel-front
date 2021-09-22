@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthStorageService } from 'src/app/services/auth-storage.service';
 import { EnderecoService } from '../../services/endereco.service';
 import { VerificaEnderecoCobrancaValidation } from '../../validations/existe-endereco-cobranca.validation';
 
@@ -10,6 +11,7 @@ import { VerificaEnderecoCobrancaValidation } from '../../validations/existe-end
 })
 export class EnderecoComponent implements OnInit {
   colunasExibidas: string[] = ['logradouro', 'numero', 'tipoEndereco', 'cidade', 'estado', 'acoes'];
+  @Input() alteracaoCadastro?: boolean;
   @Input() enderecos?: Endereco[] = [];
   @Output() sincronizarEnderecos = new EventEmitter();
 
@@ -24,17 +26,18 @@ export class EnderecoComponent implements OnInit {
   tiposLogradouro: TipoLogradouro[] = [];
   currentIndex = -1;
 
-  cidadesAdicionadas: Cidade[] = [];
-
   constructor(
     formBuilder: FormBuilder,
-    private enderecoService: EnderecoService) {
+    private enderecoService: EnderecoService,
+    private authStorageService: AuthStorageService
+  ) {
     this.enderecoCadastroFormGroup = formBuilder.group({
+      id: [null],
       identificadorEndereco: ['', [Validators.required]],
-      tipoEndereco: ['', [Validators.required]],
-      tipoResidencia: ['', [Validators.required]],
+      tipoEndereco: [null, [Validators.required]],
+      tipoResidencia: [null, [Validators.required]],
       cep: ['', [Validators.required]],
-      tipoLogradouro: ['', [Validators.required]],
+      tipoLogradouro: [null, [Validators.required]],
       logradouro: ['', [Validators.required]],
       numero: ['', [Validators.required]],
       complemento: [''],
@@ -67,10 +70,10 @@ export class EnderecoComponent implements OnInit {
     this.cidades = [];
     this.enderecoCadastroFormGroup.reset({
       identificadorEndereco: '',
-      tipoEndereco: '',
-      tipoResidencia: {} as TipoResidencia,
+      tipoEndereco: null,
+      tipoResidencia: null,
       cep: '',
-      tipoLogradouro: {} as TipoLogradouro,
+      tipoLogradouro: null,
       logradouro: '',
       numero: '',
       complemento: '',
@@ -82,64 +85,104 @@ export class EnderecoComponent implements OnInit {
   }
 
   adicionarEndereco() {
+    this.enderecoCadastroFormGroup.markAllAsTouched();
     if(this.enderecoCadastroFormGroup.valid) {
-      if (this.currentIndex > -1) {
-        this.enderecos = [
-          ...this.enderecos.filter(enderecoLista => this.enderecos.indexOf(enderecoLista) != this.currentIndex),
-          this.enderecoCadastroFormGroup.value
-        ];
+      
+      if(this.alteracaoCadastro) {
+        this.adicionarEnderecoAlteracaoCadastro();
       } else {
-        this.enderecos = [
-          ...this.enderecos,
-          this.enderecoCadastroFormGroup.value
-        ];
+        if (this.currentIndex > -1) {
+          this.enderecos = [
+            ...this.enderecos.filter(enderecoLista => this.enderecos.indexOf(enderecoLista) != this.currentIndex),
+            this.enderecoCadastroFormGroup.value
+          ];
+        } else {
+          this.enderecos = [
+            ...this.enderecos,
+            this.enderecoCadastroFormGroup.value
+          ];
+        }
+        this.editMode = false;
+        this.currentIndex = -1;
+        this.sincronizarEnderecos.emit(this.enderecos);
       }
-      for ( let i=0; i< this.cidades.length; i++) {
-        if(this.cidades[i].id == this.enderecoCadastroFormGroup.value.cidade) {
-          this.cidadesAdicionadas.push(this.cidades[i]);
-          break;
-        }  
-      }
-      this.editMode = false;
-      this.currentIndex = -1;
-      this.sincronizarEnderecos.emit(this.enderecos);
     }
   }
 
-  obterNomeCidade(idCidade: number) {
-    for ( let i=0; i< this.cidades.length; i++) {
-      if(this.cidadesAdicionadas[i].id == idCidade) {
-        return this.cidadesAdicionadas[i].descricao;
-      }  
-    }
-  }
-
-  obterSiglaEstado(idEstado: number) {
-    for ( let i=0; i< this.estados.length; i++) {
-      if(this.estados[i].id == idEstado) {
-        return this.estados[i].descricao;
-      }  
-    }
-  }
-
-  obterNomeTipoEndereco(idTipoEndereco: number) {
-    for ( let i=0; i< this.tiposEnderecos.length; i++) {
-      if(this.tiposEnderecos[i].id == idTipoEndereco) {
-        return this.tiposEnderecos[i].descricao;
-      }  
+  
+  adicionarEnderecoAlteracaoCadastro() {
+    if (this.currentIndex > -1) {
+      this.enderecoService
+        .alterarEndereco(this.authStorageService.obterDadosAutenticacao().idCliente, this.enderecoCadastroFormGroup.value)
+        .subscribe(retorno => {
+          if (retorno && retorno.includes('Erro')) {
+            alert(retorno);
+          } else {
+            alert(retorno);
+            this.enderecos = [
+              ...this.enderecos.filter(enderecoLista => this.enderecos.indexOf(enderecoLista) != this.currentIndex),
+              this.enderecoCadastroFormGroup.value
+            ];
+          }
+          this.editMode = false;
+          this.currentIndex = -1;
+          this.sincronizarEnderecos.emit(this.enderecos);
+        });
+    } else {
+      this.enderecoService
+        .salvarEndereco(this.authStorageService.obterDadosAutenticacao().idCliente, this.enderecoCadastroFormGroup.value)
+        .subscribe(retorno => {
+          if (retorno && retorno.includes('Erro')) {
+            alert(retorno);
+          } else {
+            alert(retorno);
+            this.enderecos = [
+              ...this.enderecos,
+              this.enderecoCadastroFormGroup.value
+            ];
+          }
+          this.editMode = false;
+          this.currentIndex = -1;
+          this.sincronizarEnderecos.emit(this.enderecos);
+        });
     }
   }
 
   removerEndereco(endereco) {
-    this.enderecos = this.enderecos.filter(enderecoLista => this.enderecos.indexOf(enderecoLista) != this.enderecos.indexOf(endereco));
-    this.sincronizarEnderecos.emit(this.enderecos);
+    if(this.alteracaoCadastro) {
+      this.enderecoService
+        .inativarEndereco(this.authStorageService.obterDadosAutenticacao().idCliente, endereco)
+        .subscribe(retorno => {
+          if (retorno && retorno.includes('Erro')) {
+            alert(retorno);
+          } else {
+            alert(retorno);
+            this.enderecos = this.enderecos.filter(enderecoLista => this.enderecos.indexOf(enderecoLista) != this.enderecos.indexOf(endereco));
+          }
+          this.sincronizarEnderecos.emit(this.enderecos);
+        });
+    } else {
+      this.enderecos = this.enderecos.filter(enderecoLista => this.enderecos.indexOf(enderecoLista) != this.enderecos.indexOf(endereco));
+      this.sincronizarEnderecos.emit(this.enderecos);
+    }
    
   }
 
-  editarEndereco(endereco) { 
-    this.enderecoCadastroFormGroup.reset(endereco);
+  equalsObject(opcao1: any, opcao2: any) {
+    return opcao2 && opcao1 && opcao1.id == opcao2.id;
+  }
+
+  editarEndereco(endereco: Endereco) { 
+    this.enderecoCadastroFormGroup.reset({
+      ...endereco,
+      estado: endereco.cidade.estado,
+      pais: endereco.cidade.estado.pais,
+    });
+
+    
     this.editMode = true;
     this.currentIndex = this.enderecos.indexOf(endereco);
+    this.obterEstados();
     this.obterCidades();
   }
 
@@ -155,7 +198,9 @@ export class EnderecoComponent implements OnInit {
   obterEstados() {
     this.enderecoService
       .obterEstados(this.enderecoCadastroFormGroup.value.pais)
-      .subscribe(estados => this.estados = estados);
+      .subscribe(estados => {
+        this.estados = estados
+      });
   }
 
   obterCidades() {

@@ -7,7 +7,6 @@ import { HomeModule } from './home/home.module';
 import { MainRoutingModule } from './main-routing.module';
 import { ComponentsModule } from '../components/components.module';
 import { CadastroClienteComponent } from './cadastro-cliente/cadastro-cliente.component';
-import { DocumentoComponent } from './cadastro-cliente/documento/documento.component';
 import { PipesModule } from '../pipes/pipes.module';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { CarrinhoComponent } from './carrinho/carrinho.component';
@@ -33,7 +32,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     LoginComponent,
     MainComponent,
     CadastroClienteComponent,
-    DocumentoComponent,
     CarrinhoComponent,
     ItensCarrinhoComponent,
     EntregaComponent,

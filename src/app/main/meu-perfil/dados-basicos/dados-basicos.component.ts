@@ -49,11 +49,10 @@ export class DadosBasicosComponent implements OnInit {
       .subscribe(clientes => {
         this.cadastroCliente = clientes[0];
         this.cadastroForm = formBuilder.group({
-          genero: [this.cadastroCliente.genero, [Validators.required]],
           email: [this.cadastroCliente.email, [Validators.required]],
+          genero: [this.cadastroCliente.genero, [Validators.required]],
           nome: [this.cadastroCliente.nome, [Validators.required]],
           dataNascimento: [this.cadastroCliente.dataNascimento, [Validators.required]],
-          cpf: [this.cadastroCliente.cpf, [Validators.required]],
           tipoTelefone: [this.cadastroCliente.telefones[0].tipoTelefone, [Validators.required]],
           telefone: [this.cadastroCliente.telefones[0].numero, [Validators.required]],
         });
@@ -68,6 +67,10 @@ export class DadosBasicosComponent implements OnInit {
     return new Date();
   }
 
+  equalsObj(option1: any, option2: any) {
+    return option1.id == option2?.id;
+  }
+
   sincronizarDocumentos(documentos: Documento[]) {
     this.cadastroCliente.documentos = [...documentos];
   }
@@ -77,7 +80,18 @@ export class DadosBasicosComponent implements OnInit {
   }
 
   salvaCliente() {
-
+    if (this.cadastroForm.valid) {
+      console.log(this.cadastroForm.value);
+      this.clienteService.alterarDadosBasicosCliente({
+        ...this.cadastroForm.value,
+        id: this.cadastroCliente.id,
+        documentos: this.cadastroCliente.documentos
+      })
+      .subscribe(retorno => {
+        alert(retorno)
+      });
+    }
+    // this.clienteService.alterarDadosBasicosCliente(this.cadastroForm.value)
   }
 
 }

@@ -42,7 +42,7 @@
               </div>
             </div>
             
-            <div class="row" formGroupName="usuario">
+            <!-- <div class="row" formGroupName="usuario">
               <div class="col-6">
                 <mat-form-field>
                   <mat-label>Senha</mat-label>
@@ -61,14 +61,14 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-            </div>
+            </div> -->
 
             <!-- Gênero -->
             <div class="row">
               <div class="col-4">
                 <mat-form-field>
                   <mat-label>Gênero</mat-label>
-                  <mat-select  placeholder="Selecione" formControlName="genero">
+                  <mat-select  placeholder="Selecione" formControlName="genero" [compareWith]="tipoClienteEquals">
                     <mat-option *ngFor="let genero of generos" [value]="genero">{{ genero.descricao }}</mat-option>
                   </mat-select>
                   <mat-error *ngIf="cadastroForm.get('genero').hasError('required') && form.submitted">
@@ -110,7 +110,7 @@
               <div class="col-4">
                 <mat-form-field>
                   <mat-label>Tipo do Telefone</mat-label>
-                  <mat-select  placeholder="Selecione" formControlName="tipoTelefone"> 
+                  <mat-select  placeholder="Selecione" formControlName="tipoTelefone" [compareWith]="tipoClienteEquals"> 
                     <mat-option *ngFor="let tipoTelefone of tiposTelefone" [value]="tipoTelefone">{{ tipoTelefone.descricao }}</mat-option>
                   </mat-select>
                   <mat-error *ngIf="cadastroForm.get('tipoTelefone').hasError('required') && form.submitted">
@@ -144,7 +144,7 @@
               </div>
 
               <div class="col-3 d-flex justify-content-end">
-                <button mat-flat-button color="primary" (click)="salvarCliente()">Salvar</button>
+                <button mat-flat-button color="primary" id="btn-salvar-cliente" (click)="salvarCliente()">Salvar</button>
               </div>
             </div>
           </mat-card-actions>

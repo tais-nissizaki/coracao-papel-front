@@ -40,7 +40,7 @@ export class DashboardComponent {
       const tipoGrafico = this.formDashboard.value.tipoGrafico;
       const dataInicial = this.formDashboard.value.dataInicial;
       const dataFinal = this.formDashboard.value.dataFinal;
-      const title = tipoGrafico ?
+      const title = tipoGrafico ? 
                     tipoGrafico  == 'GRAFICO_POR_PRODUTO' ?
                       'Vendas por produto' : 'Vendas por categoria'
                     : null;
@@ -67,6 +67,9 @@ export class DashboardComponent {
             text: 'Quantidade vendida'
           }
         },
+        lang: {
+          noData: 'Nenhuma informação para ser apresentada'
+        },
         xAxis: {
           type: 'datetime',
           tickInterval: 24 * 3600 * 1000,
@@ -76,12 +79,13 @@ export class DashboardComponent {
             }
           }
         },
+
         series: [
         ],
       }
       this.updateGraph(tipoGrafico, dataInicial, dataFinal);
     } else {
-      alert('Erro no preenchimento dos campos.')
+      alert('Preencha os campos para gerar o gráfico');
     }
   }
 

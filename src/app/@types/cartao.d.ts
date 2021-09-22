@@ -1,4 +1,5 @@
 interface Cartao {
+  id?: number;
   numero: number;
   nomeImpresso: string;
   validade: string;

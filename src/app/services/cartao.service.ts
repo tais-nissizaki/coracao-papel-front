@@ -13,6 +13,51 @@ export class CartaoService {
     private authStorageService: AuthStorageService
   ) { }
 
+  salvarCartao(cartao: Cartao) {
+    const { idCliente } = this.authStorageService.obterDadosAutenticacao();
+    return this.http.post(
+      'http://localhost:8083/cartoes/cliente/' + idCliente,
+      {
+        ...cartao,
+        dataValidade: this.formatarDataValidadeCartao(cartao.validade),
+      },
+      {
+        responseType: 'text',
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
+  }
+
+  alterarCartao(cartao: Cartao) {
+    const { idCliente } = this.authStorageService.obterDadosAutenticacao();
+    return this.http.put(
+      'http://localhost:8083/cartoes/cliente/' + idCliente,
+      {
+        ...cartao,
+        dataValidade: this.formatarDataValidadeCartao(cartao.validade),
+      },
+      {
+        responseType: 'text',
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
+  }
+
+  inativarCartao(cartao: Cartao) {
+    const { idCliente } = this.authStorageService.obterDadosAutenticacao();
+    return this.http.put(
+      'http://localhost:8083/cartoes/cliente/' + idCliente + '/cartao/' + cartao.id, 
+      {},
+      {
+        responseType: 'text',
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
+  }
+
   obterTiposCartao(): Observable<TipoCartao[]> {
     return this.http.get<TipoCartao[]>('http://localhost:8083/tipos-cartao');
   }
@@ -27,5 +72,19 @@ export class CartaoService {
       return of([]);
     }
     return this.http.get<Cartao[]>('http://localhost:8083/cartoes/cliente/' + idCliente);
+  }
+
+  private formatarDataValidadeCartao(validade: string) {
+    if(validade) {
+      const v = validade.replace(/\D/g, '');
+      if(v.length > 6) {
+        return v.substring(0, 4) + '-' +v.substring(4, 6) + '-01';
+      } else {
+        return validade.substring(2) + '-' +validade.substring(0,2) + '-01T00:00:00.000-03:00';
+      }
+
+    } else {
+      return validade;
+    }
   }
 }

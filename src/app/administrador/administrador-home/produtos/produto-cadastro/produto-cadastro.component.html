@@ -63,11 +63,11 @@
                 <mat-form-field>
                   <mat-label>Categoria</mat-label>
                   <!-- <input matInput placeholder="Categoria" formControlName="categoria" /> -->
-                  <mat-select formControlName="categoria" multiple [compareWith]="categoriaEquals">
+                  <mat-select formControlName="categorias" multiple [compareWith]="categoriaEquals">
                     <mat-option *ngFor="let categoria of categorias" [value]="categoria">{{categoria.descricao}}</mat-option>
                   </mat-select>
 
-                  <mat-error *ngIf="cadastroForm.get('categoria').hasError('required') && form.submitted">
+                  <mat-error *ngIf="cadastroForm.get('categorias').hasError('required') && form.submitted">
                     Informe a categoria
                   </mat-error>
                 </mat-form-field>
@@ -75,7 +75,7 @@
               <div class="col-3">
                 <mat-form-field>
                   <mat-label>Ano</mat-label>
-                  <input matInput placeholder="Ano" formControlName="ano" />
+                  <input matInput placeholder="Ano" formControlName="ano" mask="0000" />
 
                   <mat-error *ngIf="cadastroForm.get('ano').hasError('required') && form.submitted">
                     Informe o ano
@@ -118,7 +118,7 @@
               <div class="col-4">
                 <mat-form-field>
                   <mat-label>Número de páginas</mat-label>
-                  <input matInput placeholder="NumeroPaginas" formControlName="numeroPaginas" />
+                  <input matInput placeholder="NumeroPaginas" formControlName="numeroPaginas" mask="9990" />
 
                   <mat-error *ngIf="cadastroForm.get('numeroPaginas').hasError('required') && form.submitted">
                     Informe o número de páginas
@@ -151,13 +151,13 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-6">
+              <!-- <div class="col-6">
                 <mat-form-field>
                   <mat-label>Valor</mat-label>
                   <input matInput placeholder="Valor" formControlName="valor" />
 
                 </mat-form-field>
-              </div>
+              </div> -->
             </div>
 
             <div class="row">
@@ -171,8 +171,8 @@
 
                 <mat-form-field>
                   <mat-label>Altura</mat-label>
-                  <input matInput placeholder="Altura" formControlName="altura" />
-
+                  <input matInput placeholder="Altura" formControlName="altura" mask="separator.2" thousandSeparator="." separatorLimit="10" />
+                  <span matSuffix>cm</span>
                   <mat-error *ngIf="cadastroForm.get('altura').hasError('required') && form.submitted">
                     Informe a altura do produto
                   </mat-error>
@@ -182,8 +182,8 @@
               <div class="col-3">
                 <mat-form-field>
                   <mat-label>Largura</mat-label>
-                  <input matInput placeholder="Largura" formControlName="largura" />
-
+                  <input matInput placeholder="Largura" formControlName="largura" mask="separator.2" thousandSeparator="." separatorLimit="10" />
+                  <span matSuffix>cm</span>
                   <mat-error *ngIf="cadastroForm.get('largura').hasError('required') && form.submitted">
                     Informe a largura do produto
                   </mat-error>
@@ -193,8 +193,8 @@
               <div class="col-3">
                 <mat-form-field>
                   <mat-label>Profundidade</mat-label>
-                  <input matInput placeholder="Profundidade" formControlName="profundidade" />
-
+                  <input matInput placeholder="Profundidade" formControlName="profundidade" mask="separator.2" thousandSeparator="." separatorLimit="10" />
+                  <span matSuffix>cm</span>
                   <mat-error *ngIf="cadastroForm.get('profundidade').hasError('required') && form.submitted">
                     Informe a profundidade do produto
                   </mat-error>
@@ -204,8 +204,8 @@
               <div class="col-3">
                 <mat-form-field>
                   <mat-label>Peso</mat-label>
-                  <input matInput placeholder="Peso" formControlName="peso" />
-
+                  <input matInput placeholder="Peso" formControlName="peso" mask="separator.3" thousandSeparator="." separatorLimit="100" />
+                  <span matSuffix>kg</span>
                   <mat-error *ngIf="cadastroForm.get('peso').hasError('required') && form.submitted">
                     Informe o peso do produto
                   </mat-error>
@@ -219,11 +219,20 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mb-4">
               <div class="col">
-                <input type="file" accept="image/*" formControlName="peso"/>
+                <input type="file" accept="image/jpeg" (change)="selectFile($event.target)"/>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col">
+            <div class="image-box">
+              <img mat-card-image [src]="imageBase64EncodedString" >
+            </div>
+          </div>
+        </div>
+
 
           </mat-card-content>
           <mat-card-actions>

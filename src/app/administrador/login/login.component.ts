@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
               alert('Usuário e senha inválidos');
             }
           },
-          () => alert('Usuário e senha inválidos---')
+          () => alert('Usuário e senha inválidos')
         )
     }
   }

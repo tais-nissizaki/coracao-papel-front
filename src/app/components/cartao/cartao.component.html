@@ -39,7 +39,7 @@
       </table>
       
       <div class="d-flex justify-content-end my-3">
-        <button type="button" mat-flat-button color="primary" (click)="novo()">Novo</button>
+        <button type="button" mat-flat-button color="primary" id="btn-novo-cartao" (click)="novo()">Novo</button>
       </div>
       
       <form [formGroup]="cartaoCadastroFormGroup" *ngIf="editMode">
@@ -47,7 +47,7 @@
           <div class="col-4">
             <mat-form-field>
               <mat-label>Bandeira</mat-label>
-              <mat-select placeholder="Selecione" formControlName="bandeiraCartao">
+              <mat-select placeholder="Selecione" formControlName="bandeiraCartao" [compareWith]="equalObject">
                 <mat-option *ngFor="let bandeira of bandeiras" [value]="bandeira">{{ bandeira.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="cartaoCadastroFormGroup.get('bandeiraCartao').hasError('required')">
@@ -58,7 +58,7 @@
           <div class="col-4">
             <mat-form-field>
               <mat-label>Tipo de cartão</mat-label>
-              <mat-select placeholder="Selecione" formControlName="tipoCartao">
+              <mat-select placeholder="Selecione" formControlName="tipoCartao" [compareWith]="equalObject">
                 <mat-option *ngFor="let tipoCartao of tiposCartao" [value]="tipoCartao">{{ tipoCartao.descricao }}</mat-option>
               </mat-select>
               <mat-error *ngIf="cartaoCadastroFormGroup.get('tipoCartao').hasError('required')">
@@ -113,7 +113,7 @@
           <button type="button" mat-flat-button color="warn" (click)="cancelar()">Cancelar</button>
         </div>
         <div class="col-2 d-flex justify-content-end">
-          <button type="button" mat-flat-button color="primary" (click)="adicionarCartao()">{{ (currentIndex > -1) ? 'Salvar': 'Adicionar' }} </button>
+          <button type="button" mat-flat-button color="primary" id="btn-adicionar-cartao" (click)="adicionarCartao()">{{ (currentIndex > -1) ? 'Salvar': 'Adicionar' }} </button>
         </div>
       </div>
     </mat-card-content>

@@ -14,6 +14,42 @@ export class EnderecoService {
     ) {
   }
 
+  salvarEndereco(idCliente: number, endereco: Endereco) {
+    return this.http.post(
+      'http://localhost:8083/enderecos/cliente/' + idCliente, 
+      endereco,
+      {
+        responseType: 'text',
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
+  }
+
+  alterarEndereco(idCliente: number, endereco: Endereco) {
+    return this.http.put(
+      'http://localhost:8083/enderecos/cliente/' + idCliente, 
+      endereco,
+      {
+        responseType: 'text',
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
+  }
+
+  inativarEndereco(idCliente: number, endereco: Endereco) {
+    return this.http.put(
+      'http://localhost:8083/enderecos/cliente/' + idCliente + '/endereco/' + endereco.id, 
+      {},
+      {
+        responseType: 'text',
+        headers: {
+          'Authorization': 'Basic ' + this.authStorageService.obterDadosAutenticacao().basicToken,
+        },
+      });
+  }
+
   obterTiposEndereco(): Observable<TipoEndereco[]> {
     return this.http.get<TipoEndereco[]>('http://localhost:8083/tipos-endereco');
   }

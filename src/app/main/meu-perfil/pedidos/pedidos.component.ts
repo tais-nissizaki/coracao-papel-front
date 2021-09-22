@@ -48,7 +48,7 @@ export class PedidosComponent implements OnInit {
   }
 
   detalhes(pedido: SolicitacaoPedido) {
-    this.pedido = pedido; 
+    this.pedido = pedido;
     this.pedido.itensPedido.forEach(itemPedido => itemPedido.selecionado = false);
     this.solicatacaoTroca = false;
     this.quantidadesMaximas = [];
@@ -62,7 +62,7 @@ export class PedidosComponent implements OnInit {
       this.formTroca.push(new FormControl(itemPedido.quantidade, [Validators.required, Validators.min(1), Validators.max(itemPedido.quantidade)]));
     })
   }
-  
+
   atualizarTodosSelecionados() {
     this.todosSelecionados = this.pedido.itensPedido != null && this.pedido.itensPedido.every(t => t.selecionado);
   }
@@ -105,18 +105,18 @@ export class PedidosComponent implements OnInit {
     console.log(pedido);
     return pedido.statusPedido && pedido.statusPedido.id == 4 && !pedido.trocaSolicitada;
   }
-  
+
   solicitarTrocaPedidoSelecionado() {
     console.log(this.pedido);
-  //   this.pedidoService.solicitarTroca(this.pedido)
-  //     .subscribe(
-  //         retorno => {
-  //             const [ mensagem, idPedido ] = retorno.split(".");
-  //             alert(mensagem);
-  //             this.router.navigateByUrl('/meu-perfil/pedidos/confirmacao-troca/' + ''+idPedido.trim());
-  //           },
-  //           (err) => alert("Ocorreu um erro ao solicitar a troca do pedido")
-  //         );
+    this.pedidoService.solicitarTroca(this.pedido)
+      .subscribe(
+          retorno => {
+              const [ mensagem, idPedido ] = retorno.split(".");
+              alert(mensagem);
+              this.router.navigateByUrl('/meu-perfil/pedidos/confirmacao-troca/' + ''+idPedido.trim());
+            },
+            (err) => alert("Ocorreu um erro ao solicitar a troca do pedido")
+          );
   }
 
   calcularValorTroca(pedido: SolicitacaoPedido) {
@@ -125,7 +125,9 @@ export class PedidosComponent implements OnInit {
   }
 
   teste(t: AbstractControl) {
-    console.log(typeof t);
-    return t as FormControl;
+    if(t) {
+      console.log(typeof t);
+      return t as FormControl;
+    }
   }
 }

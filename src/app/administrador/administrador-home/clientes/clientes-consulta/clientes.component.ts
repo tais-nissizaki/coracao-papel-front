@@ -10,6 +10,7 @@ import { ClienteService } from 'src/app/services/cliente.service';
 export class ClientesComponent implements OnInit {
 
   filtroNome = '';
+  filtroCPF = '';
   clientes: Cliente[] = [];
   colunas = ['nome', 'cpf', 'acoes']
 
@@ -26,7 +27,12 @@ export class ClientesComponent implements OnInit {
     const cliente = {
       nome: this.filtroNome,
       enderecos: [],
-      documentos: []
+      documentos: [{
+        codigo: this.filtroCPF,
+        tipoDocumento: {
+          id: 2
+        }
+      }]
     } as Cliente;
     this.clienteSevice.pesquisarCliente(cliente).subscribe(
       (retorno) => {
